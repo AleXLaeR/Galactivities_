@@ -1,51 +1,39 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Button, Form, Segment } from 'semantic-ui-react';
-import {Activity, DEFAULT_STATE} from '../../models/activity';
-import agent from "../../api/agent";
-import {useDispatch, useSelector} from "react-redux";
-import {setEditMode, setSubmitMode} from "../../reducers/state/state.action";
-import {setActivities} from "../../reducers/activities/activities.action";
-import {selectActivities} from "../../reducers/activities/activities.selector";
-import {setSelectedActivity} from "../../reducers/activity/activity.action";
-import {generateNextGuid} from "../../utils/guid.utils";
-import {selectIsEditMode, selectIsSubmitMode} from "../../reducers/state/state.selector";
+import {DEFAULT_STATE} from '../../models/activity';
 import ActivityDetails from "./ActivityDetails.component";
+import {useMobXStore} from "../../app/stores/root.store";
+import {observer} from "mobx-react-lite";
 
-interface Props {
-    activity: Activity;
-}
+const ActivityForm = () => {
+    const { activityStore } = useMobXStore();
+    const {
+        selectedActivity, selectActivity,
+        isEditMode,
+        isSubmitMode, setSubmitMode,
+        onEditClickAction,
+        updateActivity, createActivity
+    } = activityStore;
 
-export default function ActivityForm({ activity: selectedActivity }: Props) {
-    const dispatch = useDispatch();
     const [activity, setActivity] = useState(selectedActivity ?? DEFAULT_STATE);
 
-    const activities = useSelector(selectActivities) as Activity[];
-
-    const isEditMode = useSelector(selectIsEditMode);
-    const isSubmitMode = useSelector(selectIsSubmitMode);
-
     const handleSubmit = async () => {
-        dispatch(setSubmitMode(true));
+        setSubmitMode(true);
 
         if (activity.id) {
-            await agent.Activities.update(activity);
-            dispatch(setActivities([...activities.filter(a => a.id !== activity.id), activity]));
+            await updateActivity(activity);
         } else {
-            await agent.Activities.create({...activity, id: generateNextGuid()});
-            dispatch(setActivities([...activities, activity]));
+            await createActivity(activity);
         }
 
-        dispatch(setSelectedActivity(activity));
-        dispatch(setEditMode(false));
-        dispatch(setSubmitMode(false));
+        selectActivity(activity.id);
+        setSubmitMode(false);
     }
 
-    function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        const {name, value} = event.target;
+    const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = event.target;
         setActivity({...activity, [name]: value});
     }
-
-    const handleFormClose = () => dispatch(setEditMode(!isEditMode));
 
     return (
         <>
@@ -56,18 +44,21 @@ export default function ActivityForm({ activity: selectedActivity }: Props) {
                         placeholder='Title'
                         value={activity.title}
                         name='title'
+                        required
                         onChange={handleInputChange}
                     />
                     <Form.TextArea
                         placeholder='Description'
                         value={activity.description}
                         name='description'
+                        required
                         onChange={handleInputChange}
                     />
                     <Form.Input
                         placeholder='Category'
                         value={activity.category}
                         name='category'
+                        required
                         onChange={handleInputChange}
                     />
                     <Form.Input
@@ -75,12 +66,14 @@ export default function ActivityForm({ activity: selectedActivity }: Props) {
                         placeholder='Date'
                         value={activity.date}
                         name='date'
+                        required
                         onChange={handleInputChange}
                     />
                     <Form.Input
                         placeholder='Location'
                         value={activity.location}
                         name='location'
+                        required
                         onChange={handleInputChange}
                     />
                     <Form.Input
@@ -98,7 +91,7 @@ export default function ActivityForm({ activity: selectedActivity }: Props) {
                         content='Submit'
                     />
                     <Button
-                        onClick={handleFormClose}
+                        onClick={onEditClickAction}
                         floated='right'
                         type='button'
                         content='Cancel'
@@ -108,3 +101,5 @@ export default function ActivityForm({ activity: selectedActivity }: Props) {
         </>
     )
 }
+
+export default observer(ActivityForm);

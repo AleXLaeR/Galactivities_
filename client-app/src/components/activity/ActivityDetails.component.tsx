@@ -1,26 +1,16 @@
 import React from 'react';
 import { Button, Card, Image } from 'semantic-ui-react';
 import { Activity } from '../../models/activity';
-import {useDispatch, useSelector} from "react-redux";
-import {setEditMode} from "../../reducers/state/state.action";
-import {setSelectedActivity} from "../../reducers/activity/activity.action";
-import {selectIsEditMode} from "../../reducers/state/state.selector";
+import {useMobXStore} from "../../app/stores/root.store";
+import {observer} from "mobx-react-lite";
 
 interface Props {
     activity: Activity;
 }
 
-export default function ActivityDetails({ activity }: Props) {
-    const dispatch = useDispatch();
-    const isEditMode = useSelector(selectIsEditMode);
-
-    const handleFormOpen = () =>
-        dispatch(setEditMode(!isEditMode));
-
-    const handleActivityCancel = () => {
-        dispatch(setSelectedActivity(undefined));
-        dispatch(setEditMode(false));
-    }
+const ActivityDetails = ({ activity }: Props) => {
+    const { activityStore } = useMobXStore();
+    const { onEditClickAction, onActivitySelect } = activityStore;
 
     return (
         <Card fluid>
@@ -39,10 +29,12 @@ export default function ActivityDetails({ activity }: Props) {
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths='2'>
-                    <Button onClick={handleFormOpen} basic color='blue' content='Edit' />
-                    <Button onClick={handleActivityCancel} basic color='grey' content='Cancel' />
+                    <Button onClick={onEditClickAction} basic color='blue' content='Edit' />
+                    <Button onClick={() => onActivitySelect()} basic color='grey' content='Cancel' />
                 </Button.Group>
             </Card.Content>
         </Card>
     )
 }
+
+export default observer(ActivityDetails);

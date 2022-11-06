@@ -1,4 +1,0 @@
-export enum STATE_ACTION_TYPES {
-    SET_EDIT_MODE = 'state/SET_EDIT_MODE',
-    SET_SUBMIT_MODE = 'state/SET_SUBMIT_MODE',
-}

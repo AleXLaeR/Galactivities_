@@ -1,17 +1,15 @@
 import { Item, Segment } from 'semantic-ui-react';
-import {Activity} from '../../models/activity';
-import {useSelector} from "react-redux";
-import {selectActivities} from "../../reducers/activities/activities.selector";
-
 import ActivityItem from "./ActivityItem.component";
+import {useMobXStore} from "../../app/stores/root.store";
+import {observer} from "mobx-react-lite";
 
 const ActivityList = () => {
-    const activities = useSelector(selectActivities) as Activity[];
+    const { activityStore } = useMobXStore();
 
     return (
         <Segment>
             <Item.Group divided>
-                {activities.map(activity => (
+                {activityStore.getActivitiesByDate().map(activity => (
                     <ActivityItem key={activity.id} activity={activity} />
                 ))}
             </Item.Group>
@@ -19,4 +17,4 @@ const ActivityList = () => {
     )
 }
 
-export default ActivityList;
+export default observer(ActivityList);

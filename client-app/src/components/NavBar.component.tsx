@@ -1,13 +1,12 @@
 import React from 'react';
 import { Button, Container, Menu } from 'semantic-ui-react';
-import {useDispatch} from "react-redux";
-import {setEditMode} from "../reducers/state/state.action";
+import {useMobXStore} from "../app/stores/root.store";
+import {observer} from "mobx-react-lite";
 
-export default function NavBar() {
-    const dispatch = useDispatch();
+const NavBar = () => {
+    const { activityStore } = useMobXStore();
 
-    const handleFormOpen = () =>
-        dispatch(setEditMode(true));
+    const handleFormOpen = () => activityStore.setEditMode(true);
 
     return (
         <Menu inverted fixed='top'>
@@ -24,3 +23,5 @@ export default function NavBar() {
         </Menu>
     )
 }
+
+export default observer(NavBar);
