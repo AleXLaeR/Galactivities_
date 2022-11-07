@@ -1,32 +1,47 @@
-import React, { ChangeEvent, useState } from 'react';
-import { Button, Form, Segment } from 'semantic-ui-react';
-import {DEFAULT_STATE} from '../../models/activity';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from "react-router-dom";
+
+import { DEFAULT_STATE } from '../../models/activity';
+import { ROUTES } from "../../utils/contants.utils";
+
+import { generateNextGuid } from "../../utils/guid.utils";
+
+import { useMobXStore } from "../../app/stores/root.store";
+import { observer } from "mobx-react-lite";
+
+import { Button, Container, Form, Segment } from 'semantic-ui-react';
 import ActivityDetails from "./ActivityDetails.component";
-import {useMobXStore} from "../../app/stores/root.store";
-import {observer} from "mobx-react-lite";
 
 const ActivityForm = () => {
     const { activityStore } = useMobXStore();
-    const {
-        selectedActivity, selectActivity,
-        isEditMode,
-        isSubmitMode, setSubmitMode,
-        onEditClickAction,
-        updateActivity, createActivity
-    } = activityStore;
+    const { isSubmitMode, setSubmitMode, updateActivity, createActivity, fetchActivity } = activityStore;
 
-    const [activity, setActivity] = useState(selectedActivity ?? DEFAULT_STATE);
+    const navigate = useNavigate();
+    const { id } = useParams<{id: string}>();
+
+    const [activity, setActivity] = useState(DEFAULT_STATE);
+
+    useEffect(() => {
+        const loadActivity = async (id?: string) => {
+            if (id) {
+                const newActivity = await fetchActivity(id);
+                setActivity(newActivity!);
+            }
+        }
+        loadActivity(id);
+    }, [id, fetchActivity]);
 
     const handleSubmit = async () => {
         setSubmitMode(true);
 
-        if (activity.id) {
-            await updateActivity(activity);
-        } else {
+        if (activity.id.length === 0) {
+            activity.id = generateNextGuid();
             await createActivity(activity);
+        } else {
+            await updateActivity(activity);
         }
 
-        selectActivity(activity.id);
+        navigate(`${ROUTES.ACTIVITIES.LIST}/${activity.id}`);
         setSubmitMode(false);
     }
 
@@ -36,8 +51,8 @@ const ActivityForm = () => {
     }
 
     return (
-        <>
-            {isEditMode && <ActivityDetails activity={activity}/>}
+        <Container style={{marginTop: '6rem'}}>
+            {<ActivityDetails newActivity={activity} />}
             <Segment clearing>
                 <Form onSubmit={handleSubmit} autoComplete='off'>
                     <Form.Input
@@ -91,15 +106,16 @@ const ActivityForm = () => {
                         content='Submit'
                     />
                     <Button
-                        onClick={onEditClickAction}
+                        as={Link}
+                        to={ROUTES.ACTIVITIES.LIST}
                         floated='right'
                         type='button'
                         content='Cancel'
                     />
                 </Form>
             </Segment>
-        </>
-    )
+        </Container>
+    );
 }
 
 export default observer(ActivityForm);

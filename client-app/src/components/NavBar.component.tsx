@@ -1,27 +1,27 @@
-import React from 'react';
+import { Outlet } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+
+import { observer } from "mobx-react-lite";
+import { ROUTES } from "../utils/contants.utils";
+
 import { Button, Container, Menu } from 'semantic-ui-react';
-import {useMobXStore} from "../app/stores/root.store";
-import {observer} from "mobx-react-lite";
 
-const NavBar = () => {
-    const { activityStore } = useMobXStore();
-
-    const handleFormOpen = () => activityStore.setEditMode(true);
-
-    return (
+const NavBar = () => (
+    <>
         <Menu inverted fixed='top'>
             <Container>
-                <Menu.Item header>
-                    <img src="/assets/logo.png" alt="logo" style={{marginRight: '10px'}} />
-                    Reactivities
+                <Menu.Item as={NavLink} to='/' header>
+                    <img src="/assets/logo.png" alt="logo" style={{marginRight: '10px'}}/>
+                        Reactivities
                 </Menu.Item>
-                <Menu.Item name='Activities' />
+                <Menu.Item as={NavLink} to={ROUTES.ACTIVITIES.LIST} name='Activities'/>
                 <Menu.Item>
-                    <Button onClick={handleFormOpen} positive content='Create Activity' />
+                    <Button as={NavLink} to={ROUTES.ACTIVITIES.CREATE} positive content='Create Activity'/>
                 </Menu.Item>
             </Container>
         </Menu>
-    )
-}
+        <Outlet/>
+    </>
+);
 
 export default observer(NavBar);
