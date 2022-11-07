@@ -1,27 +1,19 @@
-import React from 'react';
-import { Grid } from 'semantic-ui-react';
-import ActivityDetails from './ActivityDetails.component';
-import ActivityForm from './ActivityForm.component';
+import { Container, Grid } from 'semantic-ui-react';
 import ActivityList from './ActivityList.component';
-import {useMobXStore} from "../../app/stores/root.store";
-import {observer} from "mobx-react-lite";
 
-const ActivityDashboard = () => {
-    const { activityStore } = useMobXStore();
-    const { selectedActivity, isEditMode } = activityStore;
+import { observer } from "mobx-react-lite";
 
-    return (
+const ActivityDashboard = () => (
+    <Container style={{marginTop: '6rem'}}>
         <Grid>
             <Grid.Column width='10'>
-                <ActivityList />
+                <ActivityList/>
             </Grid.Column>
             <Grid.Column width='6'>
-                {selectedActivity && !isEditMode &&
-                    <ActivityDetails activity={selectedActivity} />}
-                {isEditMode && <ActivityForm />}
+                <h2>Future Activity filters</h2>
             </Grid.Column>
         </Grid>
-    )
-}
+    </Container>
+);
 
 export default observer(ActivityDashboard);

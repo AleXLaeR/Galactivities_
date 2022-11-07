@@ -1,8 +1,13 @@
+import { SyntheticEvent, useState } from "react";
+import { Link } from "react-router-dom";
+
 import {Activity} from "../../models/activity";
+import { ROUTES } from "../../utils/contants.utils";
+
+import { useMobXStore } from "../../app/stores/root.store";
+import { observer } from "mobx-react-lite";
+
 import {Button, Item, Label} from "semantic-ui-react";
-import {SyntheticEvent, useState} from "react";
-import {useMobXStore} from "../../app/stores/root.store";
-import {observer} from "mobx-react-lite";
 
 interface Props {
     activity: Activity,
@@ -12,7 +17,7 @@ const ActivityItem = ({ activity }: Props) => {
     const [target, setTarget] = useState('');
 
     const { activityStore } = useMobXStore();
-    const { isSubmitMode, deleteActivity, onActivitySelect } = activityStore;
+    const { isSubmitMode, deleteActivity } = activityStore;
 
     const handleActivityDelete = async (e: SyntheticEvent<HTMLButtonElement>, id: string) => {
         setTarget(e.currentTarget.name);
@@ -30,7 +35,8 @@ const ActivityItem = ({ activity }: Props) => {
                 </Item.Description>
                 <Item.Extra>
                     <Button
-                        onClick={() => onActivitySelect(activity.id)}
+                        as={Link}
+                        to={`${ROUTES.ACTIVITIES.LIST}/${activity.id}`}
                         floated='right'
                         content='View'
                         color='blue'

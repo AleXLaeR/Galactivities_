@@ -1,12 +1,13 @@
-import {makeAutoObservable, runInAction} from "mobx";
-import {Activity} from "../../models/activity";
+import { makeAutoObservable, runInAction } from "mobx";
+
+import { Activity } from "../../models/activity";
 import agent from "../api/agent";
-import {extractDateFromDateTimeIso} from "../../utils/formatter.utils";
-import {generateNextGuid} from "../../utils/guid.utils";
+
+import { extractDateFromDateTimeIso } from "../../utils/formatter.utils";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
-    selectedActivity: Activity | undefined;
+    selectedActivity: Activity | undefined = undefined;
     isEditMode: boolean = false;
     isSubmitMode: boolean = false;
     isLoadingInitial: boolean = false;
@@ -19,19 +20,42 @@ export default class ActivityStore {
         this.setLoadingInitial(true);
         try {
             const activities = await agent.Activities.list();
-            runInAction(() => {
-                activities.forEach(a => {
-                    a.date = extractDateFromDateTimeIso(a.date);
-                    this.activityRegistry.set(a.id, a);
-                });
-            });
+            runInAction(() => activities.forEach(this.addActivity));
         }
         catch (error: any) {
             console.log(error);
         }
-        finally {
-            this.setLoadingInitial(false);
+        this.setLoadingInitial(false);
+    }
+
+    public fetchActivity = async (id: string) => {
+        let activity = this.activityRegistry.get(id);
+
+        if (activity) {
+            this.selectedActivity = activity;
+            return activity;
+        } else {
+            this.setLoadingInitial(true);
+            try {
+                const fetchedActivity = await agent.Activities.details(id);
+                runInAction(() => {
+                    this.addActivity(fetchedActivity);
+                    this.selectedActivity = fetchedActivity;
+                });
+            }
+            catch (error: any) {
+                console.log(error);
+            }
+            finally {
+                this.setLoadingInitial(false);
+            }
+            return activity;
         }
+    }
+
+    private addActivity = (activity: Activity) => {
+        activity.date = extractDateFromDateTimeIso(activity.date);
+        this.activityRegistry.set(activity.id, activity);
     }
 
     public getActivitiesByDate = (): Activity[]  => {
@@ -43,11 +67,6 @@ export default class ActivityStore {
         this.isLoadingInitial = state;
     }
 
-    public selectActivity = (id?: string) => {
-        this.selectedActivity = id ? this.activityRegistry.get(id) : undefined;
-        this.setEditMode(false);
-    }
-
     public setEditMode = (state: boolean) => {
         this.isEditMode = state;
     }
@@ -57,7 +76,6 @@ export default class ActivityStore {
     }
 
     public createActivity = async (activity: Activity) => {
-        activity.id = generateNextGuid();
         await agent.Activities.create(activity);
         runInAction(() => {
             this.activityRegistry.set(activity.id, activity);
@@ -85,10 +103,5 @@ export default class ActivityStore {
 
     public onEditClickAction = () => {
         this.setEditMode(!this.isEditMode);
-    }
-
-    public onActivitySelect = (id?: string) => {
-        this.selectActivity(id);
-        this.setEditMode(false);
     }
 }
