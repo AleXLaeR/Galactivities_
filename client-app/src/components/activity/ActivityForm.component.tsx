@@ -10,7 +10,8 @@ import { useMobXStore } from "../../app/stores/root.store";
 import { observer } from "mobx-react-lite";
 
 import { Button, Container, Form, Segment } from 'semantic-ui-react';
-import ActivityDetails from "./ActivityDetails.component";
+import ActivityDetails from "./details/ActivityDetails.component";
+import ActivityDetailedHeader from "./details/ActivityDetailsHeader.component";
 
 const ActivityForm = () => {
     const { activityStore } = useMobXStore();
@@ -52,7 +53,7 @@ const ActivityForm = () => {
 
     return (
         <Container style={{marginTop: '6rem'}}>
-            {<ActivityDetails newActivity={activity} />}
+            {<ActivityDetailedHeader activity={activity} />}
             <Segment clearing>
                 <Form onSubmit={handleSubmit} autoComplete='off'>
                     <Form.Input

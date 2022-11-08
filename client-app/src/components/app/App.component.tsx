@@ -7,20 +7,19 @@ import { ROUTES } from "../../utils/contants.utils";
 import { useMobXStore } from "../../app/stores/root.store";
 import  { observer } from "mobx-react-lite";
 
-import HomePage from "../HomePage.component";
-import Spinner from "../Spinner.component.";
+import HomePage from "../routes/home/HomePage.component";
+import Spinner from "../helpers/Spinner.component.";
 
-import NavBar from '../NavBar.component';
-import ActivityDashboard from '../activity/ActivityDashboard.component';
-import ActivityDetails from "../activity/ActivityDetails.component";
+import NavBar from '../routes/NavBar.component';
+import ActivityDashboard from '../activity/dashboard/ActivityDashboard.component';
+import ActivityDetails from "../activity/details/ActivityDetails.component";
 import ActivityForm from "../activity/ActivityForm.component";
 
 const App = () => {
     const { activityStore } = useMobXStore();
 
     useEffect(() => {
-        activityStore.fetchActivities()
-            .then(() => console.log('Activities successfully fetched!'));
+        activityStore.fetchActivities().then(() => {});
     }, [activityStore]);
 
     return (

@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
 import { observer } from "mobx-react-lite";
-import { ROUTES } from "../utils/contants.utils";
+import { ROUTES } from "../../utils/contants.utils";
 
 import { Button, Container, Menu } from 'semantic-ui-react';
 

@@ -2,6 +2,7 @@ import { Container, Grid } from 'semantic-ui-react';
 import ActivityList from './ActivityList.component';
 
 import { observer } from "mobx-react-lite";
+import ActivityFilters from "./filters/ActivityFilters.component";
 
 const ActivityDashboard = () => (
     <Container style={{marginTop: '6rem'}}>
@@ -10,7 +11,7 @@ const ActivityDashboard = () => (
                 <ActivityList/>
             </Grid.Column>
             <Grid.Column width='6'>
-                <h2>Future Activity filters</h2>
+                <ActivityFilters />
             </Grid.Column>
         </Grid>
     </Container>
