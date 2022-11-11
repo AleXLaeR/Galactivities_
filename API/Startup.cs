@@ -1,6 +1,6 @@
 ﻿
 using API.Extensions;
-using App.Core_Shared;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;

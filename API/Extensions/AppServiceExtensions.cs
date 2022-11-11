@@ -1,5 +1,7 @@
-﻿using App.Core_Shared;
-using Application.Activities;
+﻿using Application.Activities;
+using Application.Core;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -26,6 +28,12 @@ public static class AppServiceExtensions
                 .AllowAnyHeader()
                 .WithOrigins("http://localhost:3000");
         }));
+
+        //services.AddFluentValidationAutoValidation(_config =>
+        //{
+        //    _config.DisableDataAnnotationsValidation = true;
+        //});
+        //services.AddValidatorsFromAssemblyContaining(typeof(Create));
         
         services.AddMediatR(typeof(List.Handler).Assembly);
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);

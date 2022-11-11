@@ -23,5 +23,6 @@ public class Activity
     [Required]
     public string Location { get; set; }
     
-    public string? Venue { get; set; }
+    [Required]
+    public string Venue { get; set; }
 }
