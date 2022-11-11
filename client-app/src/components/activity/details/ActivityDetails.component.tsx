@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useParams } from "react-router-dom";
 
-import { Activity } from '../../../models/activity';
+import { Activity } from '../../../models/Activity.model';
 
 import { useMobXStore } from "../../../app/stores/root.store";
 import { observer } from "mobx-react-lite";

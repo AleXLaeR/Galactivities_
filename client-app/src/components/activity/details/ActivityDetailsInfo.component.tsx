@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { Activity } from "../../../models/activity";
+import { Activity } from "../../../models/Activity.model";
 
 import { Segment, Grid, Icon } from 'semantic-ui-react';
 

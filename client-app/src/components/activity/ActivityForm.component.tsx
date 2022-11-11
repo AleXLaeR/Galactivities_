@@ -1,7 +1,7 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { DEFAULT_STATE } from '../../models/activity';
+import { DEFAULT_STATE } from '../../models/Activity.model';
 import { ROUTES } from "../../utils/contants.utils";
 
 import { generateNextGuid } from "../../utils/guid.utils";
@@ -10,7 +10,6 @@ import { useMobXStore } from "../../app/stores/root.store";
 import { observer } from "mobx-react-lite";
 
 import { Button, Container, Form, Segment } from 'semantic-ui-react';
-import ActivityDetails from "./details/ActivityDetails.component";
 import ActivityDetailedHeader from "./details/ActivityDetailsHeader.component";
 
 const ActivityForm = () => {

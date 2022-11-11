@@ -1,7 +1,7 @@
 import { SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
-import {Activity} from "../../../models/activity";
+import {Activity} from "../../../models/Activity.model";
 import { ROUTES } from "../../../utils/contants.utils";
 
 import { useMobXStore } from "../../../app/stores/root.store";

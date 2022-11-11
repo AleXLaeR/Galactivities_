@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
-import { Activity } from "../../models/activity";
+import { Activity } from "../../models/Activity.model";
 import agent from "../api/agent";
 
 import { extractDateFromDateTimeIso } from "../../utils/formatter.utils";
