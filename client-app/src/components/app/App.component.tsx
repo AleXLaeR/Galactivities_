@@ -17,7 +17,7 @@ import ActivityDashboard from '../activity/dashboard/ActivityDashboard.component
 import ActivityDetails from "../activity/details/ActivityDetails.component";
 import ActivityForm from "../activity/ActivityForm.component";
 import { ToastContainer } from "react-toastify";
-import TestErrors from "../TestErrors.component";
+import TestErrors from "../errors/TestErrors.component";
 import NotFound from "../routes/NotFound.component";
 
 const App = () => {
