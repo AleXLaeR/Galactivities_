@@ -1,8 +1,9 @@
-import axios, {AxiosError, AxiosResponse} from 'axios';
-import { Activity } from '../../models/activity';
-import {toast} from "react-toastify";
-import {redirect} from "react-router-dom";
-import {redirectTo} from "../../utils/routing.utils";
+import axios, { AxiosError, AxiosResponse } from 'axios';
+
+import { Activity } from '../../models/Activity.model';
+
+import { toast } from "react-toastify";
+import { redirectTo } from "../../utils/routing.utils";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -16,14 +17,28 @@ axios.interceptors.response.use(async response => {
     await sleep(1000);
     return response;
 }, (error: AxiosError) => {
-    const { data, status } = error.response!;
+    let { data, status, config } = error.response!;
+    const newData = data as any;
 
     switch (status) {
         case 400:
-            toast.error('bad request');
-            break;
-        case 401:
-            toast.error('unauthorized');
+            if (typeof data === 'string') {
+                return toast.error(data);
+            }
+            if (config.method === 'get' && newData.errors.hasOwnProperty('id')) {
+                return redirectTo('not-found');
+            }
+
+            const { errors } = newData;
+            if (errors) {
+                const modalStateErrors = [];
+                for (const key in errors) {
+                    if (errors[key]) {
+                        modalStateErrors.push(errors[key]);
+                    }
+                }
+                throw modalStateErrors.flat();
+            }
             break;
         case 404:
             redirectTo('not-found');

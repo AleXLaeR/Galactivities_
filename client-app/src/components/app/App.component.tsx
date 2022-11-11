@@ -17,7 +17,6 @@ import ActivityDashboard from '../activity/dashboard/ActivityDashboard.component
 import ActivityDetails from "../activity/details/ActivityDetails.component";
 import ActivityForm from "../activity/ActivityForm.component";
 import { ToastContainer } from "react-toastify";
-import TestErrors from "../errors/TestErrors.component";
 import NotFound from "../routes/NotFound.component";
 
 const App = () => {
@@ -39,7 +38,6 @@ const App = () => {
                             <Route path={`${ROUTES.ACTIVITIES.LIST}/:id`} element={<ActivityDetails />}/>
                             <Route path={ROUTES.ACTIVITIES.CREATE} element={<ActivityForm />}/>
                             <Route path={`${ROUTES.CRUD.EDIT}/:id`} element={<ActivityForm />}/>
-                            <Route path='/errors' element={<TestErrors />}/>
                             <Route path='*' element={<NotFound />}/>
                         </Route>
                     </Routes>
