@@ -1,5 +1,6 @@
 ﻿
 using API.Extensions;
+using API.Middlewares;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,8 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        app.UseMiddleware<ExceptionLoggingMiddleware>();
+        
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

@@ -17,7 +17,7 @@ public class BaseApiController : ControllerBase
     {
         if (result.IsSuccess)
         {
-            return (result.Value is null) ? NotFound() : Ok(result.Value);
+            return (result.Value is null) ? NotFound("Found result matching null") : Ok(result.Value);
         }
 
         return BadRequest(result.Reasons);
