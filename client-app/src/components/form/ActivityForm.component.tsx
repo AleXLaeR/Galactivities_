@@ -3,19 +3,20 @@ import { Link, useParams } from "react-router-dom";
 
 import { DEFAULT_STATE } from '../../models/Activity.model';
 import { ROUTES } from "../../utils/contants.utils";
+import { categoryOptions } from "../../models/Categories.model";
 
 import { useMobXStore } from "../../app/stores/root.store";
 import { observer } from "mobx-react-lite";
 
-import {Button, Container, Segment} from 'semantic-ui-react';
-import ActivityDetailedHeader from "../activity/details/ActivityDetailsHeader.component";
+import { Button, Container, Segment } from 'semantic-ui-react';
 
-import {Form, Formik} from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from 'yup';
+
 import TextInput from "./FormTextInput.component";
 import TextArea from "./FormTextArea.component";
 import SelectInput from "./FormSelectInput.component";
-import {categoryOptions} from "../../models/Categories.model";
+import DateInput from "./FormDateInput.component";
 
 const ActivityForm = () => {
     const { activityStore } = useMobXStore();
@@ -41,7 +42,6 @@ const ActivityForm = () => {
 
     return (
         <Container style={{marginTop: '6rem'}}>
-            {<ActivityDetailedHeader activity={activity} />}
             <Segment clearing>
                 <Formik
                     enableReinitialize
@@ -54,7 +54,13 @@ const ActivityForm = () => {
                             <TextInput name='title' placeholder='Title'/>
                             <TextArea name='description' placeholder='Description'/>
                             <SelectInput name='category' placeholder='Category' options={categoryOptions} />
-                            <TextInput name='date' placeholder='Date'/>
+                            <DateInput
+                                placeholderText='Date'
+                                name='date'
+                                showTimeSelect
+                                timeCaption='time'
+                                dateFormat='MMMM d, yyyy h:mm aa'
+                            />
                             <TextInput name='location' placeholder='Location'/>
                             <TextInput name='venue' placeholder='Venue'/>
                             <Button

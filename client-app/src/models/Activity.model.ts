@@ -11,7 +11,7 @@ export type Activity = {
 export const DEFAULT_STATE: Activity = {
     id: '',
     title: 'Title',
-    date: 'Date',
+    date: '',
     description: 'Description',
     category: 'default',
     location: 'Location',
