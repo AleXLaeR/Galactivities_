@@ -15,7 +15,7 @@ import Spinner from "../helpers/Spinner.component.";
 import NavBar from '../routes/NavBar.component';
 import ActivityDashboard from '../activity/dashboard/ActivityDashboard.component';
 import ActivityDetails from "../activity/details/ActivityDetails.component";
-import ActivityForm from "../activity/ActivityForm.component";
+import ActivityForm from "../form/ActivityForm.component";
 import { ToastContainer } from "react-toastify";
 import NotFound from "../routes/NotFound.component";
 
