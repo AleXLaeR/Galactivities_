@@ -2,6 +2,8 @@ import { observer } from "mobx-react-lite";
 import { Activity } from "../../../models/Activity.model";
 
 import { Button, Header, Item, Segment, Image } from 'semantic-ui-react';
+import {Link} from "react-router-dom";
+import {ROUTES} from "../../../utils/contants.utils";
 
 const activityImageStyle = {
     filter: 'brightness(30%)',
@@ -46,7 +48,7 @@ const ActivityDetailedHeader = ({ activity }: Props) => (
         <Segment clearing attached='bottom'>
             <Button color='teal'>Join Activity</Button>
             <Button>Cancel attendance</Button>
-            <Button color='orange' floated='right'>
+            <Button as={Link} to={`${ROUTES.CRUD.EDIT}/${activity.id}`} color='orange' floated='right'>
                 Manage Event
             </Button>
         </Segment>
