@@ -16,7 +16,7 @@ const TextArea = (props: Props) => {
             <label>{props.label}</label>
             <textarea rows={props.rows ?? 3} {...field} {...props}/>
     {(meta.touched && meta.error) ? (
-        <Label basic color='red'>{meta.error}</Label>
+        <Label basic color='red' style={{marginTop: '.5rem'}}>{meta.error}</Label>
     ) : null}
     </Form.Field>
 );

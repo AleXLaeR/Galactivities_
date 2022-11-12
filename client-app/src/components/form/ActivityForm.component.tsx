@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { DEFAULT_STATE } from '../../models/Activity.model';
+import { generateNextGuid } from "../../utils/guid.utils";
+
+import {Activity, DEFAULT_STATE} from '../../models/Activity.model';
 import { ROUTES } from "../../utils/contants.utils";
 import { categoryOptions } from "../../models/Categories.model";
 
 import { useMobXStore } from "../../app/stores/root.store";
 import { observer } from "mobx-react-lite";
 
-import { Button, Container, Segment } from 'semantic-ui-react';
+import {Button, Container, Divider, Header, Segment} from 'semantic-ui-react';
 
 import { Form, Formik } from "formik";
 import * as Yup from 'yup';
@@ -20,17 +22,17 @@ import DateInput from "./FormDateInput.component";
 
 const ActivityForm = () => {
     const { activityStore } = useMobXStore();
-    const { isSubmitMode, fetchActivity } = activityStore;
+    const { isSubmitMode, setSubmitMode, updateActivity, createActivity, fetchActivity } = activityStore;
 
+    const navigate = useNavigate();
     const { id } = useParams<{id: string}>();
 
     const [activity, setActivity] = useState(DEFAULT_STATE);
 
     const validationSchema = Yup.object({
         title: Yup.string().required('The activity title is required'),
-        description: Yup.string().required('The activity description is required'),
         category: Yup.string().required('The activity category is required'),
-        date: Yup.date().required('The activity date is required'),
+        date: Yup.date().required('The activity date is required').nullable(),
         location: Yup.string().required('The activity location is required'),
         venue: Yup.string().required('The activity venue is required'),
     });
@@ -40,16 +42,32 @@ const ActivityForm = () => {
             fetchActivity(id).then(act => setActivity(act!));
     }, [id, fetchActivity]);
 
+    const handleFormSubmit = async (activity: Activity) => {
+        setSubmitMode(true);
+
+        if (activity.id.length === 0) {
+            activity.id = generateNextGuid();
+            await createActivity(activity);
+        } else {
+            await updateActivity(activity);
+        }
+
+        navigate(`${ROUTES.ACTIVITIES.LIST}/${activity.id}`);
+        setSubmitMode(false);
+    }
+
     return (
         <Container style={{marginTop: '6rem'}}>
             <Segment clearing>
+                <Header content='Activity Details' sub color='teal' size='large'/>
+                <Divider />
                 <Formik
                     enableReinitialize
                     validationSchema={validationSchema}
                     initialValues={activity}
-                    onSubmit={values => console.log(values)}
+                    onSubmit={values => handleFormSubmit(values)}
                 >
-                    {({ handleSubmit }) => (
+                    {({ handleSubmit, isValid, isSubmitting, dirty }) => (
                         <Form className='ui form' onSubmit={handleSubmit}>
                             <TextInput name='title' placeholder='Title'/>
                             <TextArea name='description' placeholder='Description'/>
@@ -61,9 +79,12 @@ const ActivityForm = () => {
                                 timeCaption='time'
                                 dateFormat='MMMM d, yyyy h:mm aa'
                             />
+                            <Header content='Location Details' sub color='teal' size='large'/>
+                            <Divider />
                             <TextInput name='location' placeholder='Location'/>
                             <TextInput name='venue' placeholder='Venue'/>
                             <Button
+                                disabled={isSubmitting || !dirty || !isValid}
                                 loading={isSubmitMode}
                                 floated='right'
                                 positive

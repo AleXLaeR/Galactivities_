@@ -10,10 +10,10 @@ export type Activity = {
 
 export const DEFAULT_STATE: Activity = {
     id: '',
-    title: 'Title',
+    title: '',
     date: new Date(),
-    description: 'Description',
-    category: 'default',
-    location: 'Location',
-    venue: 'Venue',
+    description: '',
+    category: '',
+    location: '',
+    venue: '',
 }
