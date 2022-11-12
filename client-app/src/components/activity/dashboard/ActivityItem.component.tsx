@@ -1,13 +1,15 @@
 import { SyntheticEvent, useState } from "react";
 import { Link } from "react-router-dom";
 
-import {Activity} from "../../../models/Activity.model";
+import { Activity } from "../../../models/Activity.model";
 import { ROUTES } from "../../../utils/contants.utils";
 
 import { useMobXStore } from "../../../app/stores/root.store";
 import { observer } from "mobx-react-lite";
 
-import {Button, Icon, Item, Segment} from "semantic-ui-react";
+import { format } from 'date-fns';
+
+import { Button, Icon, Item, Segment } from "semantic-ui-react";
 
 interface Props {
     activity: Activity,
@@ -46,7 +48,7 @@ const ActivityItem = ({ activity }: Props) => {
             </Segment>
             <Segment>
                 <span style={{display: 'flex', justifyContent: 'space-between'}}>
-                    <div><Icon name='clock'/> {activity.date}</div>
+                    <div><Icon name='clock'/> {format(activity.date, 'dd MMM yyyy h:mm aa')}</div>
                     <div><Icon name='marker'/> {activity.venue}, {activity.location}</div>
                 </span>
             </Segment>

@@ -1,7 +1,7 @@
 export type Activity = {
     id: string;
     title: string;
-    date: string;
+    date: Date;
     description: string;
     category: string;
     location: string;
@@ -11,7 +11,7 @@ export type Activity = {
 export const DEFAULT_STATE: Activity = {
     id: '',
     title: 'Title',
-    date: '',
+    date: new Date(),
     description: 'Description',
     category: 'default',
     location: 'Location',

@@ -4,6 +4,7 @@ import { Activity } from "../../../models/Activity.model";
 import { Button, Header, Item, Segment, Image } from 'semantic-ui-react';
 import {Link} from "react-router-dom";
 import {ROUTES} from "../../../utils/contants.utils";
+import {format} from "date-fns";
 
 const activityImageStyle = {
     filter: 'brightness(30%)',
@@ -36,10 +37,8 @@ const ActivityDetailedHeader = ({ activity }: Props) => (
                                 content={activity.title}
                                 style={{color: 'white'}}
                             />
-                            <p>{activity.date}</p>
-                            <p>
-                                Hosted by <strong>Bob</strong>
-                            </p>
+                            <p>{format(activity.date, 'dd MMM yyyy h:mm aa')}</p>
+                            <p>Hosted by <strong>Bob</strong></p>
                         </Item.Content>
                     </Item>
                 </Item.Group>
@@ -48,7 +47,12 @@ const ActivityDetailedHeader = ({ activity }: Props) => (
         <Segment clearing attached='bottom'>
             <Button color='teal'>Join Activity</Button>
             <Button>Cancel attendance</Button>
-            <Button as={Link} to={`${ROUTES.CRUD.EDIT}/${activity.id}`} color='orange' floated='right'>
+            <Button
+                as={Link}
+                to={`${ROUTES.CRUD.EDIT}/${activity.id}`}
+                color='orange'
+                floated='right'
+            >
                 Manage Event
             </Button>
         </Segment>
