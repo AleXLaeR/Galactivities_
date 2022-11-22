@@ -7,6 +7,9 @@ export const ROUTES = {
     ACCOUNT: {
         CURRENT_USER: '/account',
         LOGIN: '/account/login',
-        REGISTER: '/account/register',
+        REGISTER: '/account/register'
     },
+    PROFILE: {
+        BASE: '/user'
+    }
 }
