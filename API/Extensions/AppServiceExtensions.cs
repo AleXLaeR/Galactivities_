@@ -18,9 +18,12 @@ public static class AppServiceExtensions
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPIv5", Version = "v1" });
         });
         
+        services.AddControllers();
+        
         services.AddDbContext<DataContext>(option =>
-            option.UseSqlite(config.GetConnectionString("DefaultConnection"))
+            option.UseSqlServer(config.GetConnectionString("defaultConnection")!)
         );
+        
         services.AddCors(opt => opt.AddPolicy("CorsPolicy", policy =>
         {
             policy

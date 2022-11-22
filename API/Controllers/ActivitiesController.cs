@@ -1,5 +1,6 @@
 ﻿using Application.Activities;
 using Domain;
+using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
