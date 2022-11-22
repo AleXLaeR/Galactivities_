@@ -23,7 +23,7 @@ public class Startup
     {
         services.AddControllers();
         services.AddApplicationServices(_config);
-        services.AddIdentityServices();
+        services.AddIdentityServices(_config);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +44,7 @@ public class Startup
         
         app.UseCors("CorsPolicy");
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
