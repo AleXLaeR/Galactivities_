@@ -1,4 +1,5 @@
-﻿using API.Services.Token;
+﻿using System.Security.Claims;
+using API.Services.Token;
 using Domain.DTOs;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -37,13 +38,7 @@ public class AccountController : BaseApiController
 
         if (result.Succeeded)
         {
-            return new UserDto
-            {
-                DisplayName = currentUser.DisplayName,
-                ImageUri = default,
-                Token = _tokenService.GetJwtToken(currentUser),
-                Username = currentUser.UserName,
-            };
+            return CreateUserDtoFrom(currentUser);
         }
 
         return Unauthorized("Sorry, bad password");
@@ -72,15 +67,29 @@ public class AccountController : BaseApiController
 
         if (result.Succeeded)
         {
-            return new UserDto
-            {
-                DisplayName = user.DisplayName,
-                ImageUri = default,
-                Token = _tokenService.GetJwtToken(user),
-                Username = user.UserName,
-            };
+            return CreateUserDtoFrom(user);
         }
 
         return BadRequest("Sorry, There was a problem creating a user.");
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    {
+        var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
+        return CreateUserDtoFrom(user);
+    }
+
+    [NonAction]
+    private UserDto CreateUserDtoFrom(User user)
+    {
+        return new UserDto
+        {
+            DisplayName = user.DisplayName,
+            ImageUri = default,
+            Token = _tokenService.GetJwtToken(user),
+            Username = user.UserName,
+        };
     }
 }
