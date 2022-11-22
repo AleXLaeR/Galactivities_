@@ -4,6 +4,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
@@ -39,12 +40,47 @@ public class AccountController : BaseApiController
             return new UserDto
             {
                 DisplayName = currentUser.DisplayName,
-                ImageUri = null,
+                ImageUri = default,
                 Token = _tokenService.GetJwtToken(currentUser),
                 Username = currentUser.UserName,
             };
         }
 
         return Unauthorized("Sorry, bad password");
+    }
+
+    [HttpPost("register")]
+    public async Task<ActionResult<UserDto>> Register([FromBody] RegisterDto registerDto)
+    {
+        if (await _userManager.Users.AnyAsync(u => u.Email == registerDto.Email))
+        {
+            return BadRequest("Sorry, E-Mail was already taken.");
+        }
+        if (await _userManager.Users.AnyAsync(u => u.UserName == registerDto.Username))
+        {
+            return BadRequest("Sorry, Username was already taken.");
+        }
+
+        var user = new User
+        {
+            DisplayName = registerDto.DisplayName,
+            Email = registerDto.Email,
+            UserName = registerDto.Username,
+        };
+
+        var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+        if (result.Succeeded)
+        {
+            return new UserDto
+            {
+                DisplayName = user.DisplayName,
+                ImageUri = default,
+                Token = _tokenService.GetJwtToken(user),
+                Username = user.UserName,
+            };
+        }
+
+        return BadRequest("Sorry, There was a problem creating a user.");
     }
 }
