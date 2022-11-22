@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities;
 
+[Table("activities", Schema = "production")]
 public class Activity
 {
     [Key]
