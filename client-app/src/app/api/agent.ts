@@ -60,7 +60,7 @@ const responseBody = <T> (response: AxiosResponse<T>) => response.data;
 
 const requests = {
     get: <T> (url: string) => axios.get<T>(url).then(responseBody),
-    post: (url: string, body: {}) => axios.post(url, body).then(responseBody),
+    post: <T> (url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
     put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
 }
@@ -75,8 +75,8 @@ const Activities = {
 
 const Account = {
     current: () => requests.get<User>(ROUTES.ACCOUNT.CURRENT_USER),
-    login: (user: UserFormValues) => requests.post(ROUTES.ACCOUNT.LOGIN, user),
-    register: (user: UserFormValues) => requests.post(ROUTES.ACCOUNT.REGISTER, user),
+    login: (user: UserFormValues) => requests.post<User>(ROUTES.ACCOUNT.LOGIN, user),
+    register: (user: UserFormValues) => requests.post<User>(ROUTES.ACCOUNT.REGISTER, user),
 }
 
 const agent = {

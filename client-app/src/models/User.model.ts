@@ -2,7 +2,7 @@
 export interface User {
     username: string;
     displayName: string;
-    jwtToken: string;
+    token: string;
     imageUri?: string;
 }
 
