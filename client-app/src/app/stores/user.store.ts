@@ -1,9 +1,12 @@
-import {makeAutoObservable, runInAction} from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 
-import {User, UserFormValues} from "../../models/User.model";
 import agent from "../api/agent";
-import {store} from "./root.store";
-import {redirectTo} from "../../utils/routing.utils";
+import { store } from "./root.store";
+
+import { User, UserFormValues } from "../../models/User.model";
+
+import { history } from "../../index";
+import { ROUTES } from "../../utils/contants.utils";
 
 export default class UserStore {
     user: User | null = null;
@@ -22,7 +25,7 @@ export default class UserStore {
             store.commonStore.setToken(user.token);
 
             runInAction((() => this.user = user));
-            redirectTo('activities');
+            history.push(ROUTES.ACTIVITIES.LIST);
         }
         catch (error) {
             throw error;
@@ -34,6 +37,6 @@ export default class UserStore {
         window.localStorage.removeItem(store.commonStore.localStorageTokenKey);
 
         this.user = null;
-        redirectTo('/');
+        history.push('/');
     }
 }
