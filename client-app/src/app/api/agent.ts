@@ -1,14 +1,16 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import { Activity } from '../../models/Activity.model';
+import { User, UserFormValues } from "../../models/User.model";
 
 import { toast } from "react-toastify";
 import { history } from "../../index";
 
+import { store } from "../stores/root.store";
 import { ROUTES } from "../../utils/contants.utils";
-import { User, UserFormValues } from "../../models/User.model";
 
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -17,6 +19,15 @@ const sleep = (delay: number) => {
 }
 
 axios.defaults.baseURL = 'http://localhost:5000/api';
+
+axios.interceptors.request.use(config => {
+    const token = store.commonStore.jwtToken;
+    if (token) {
+        config.headers!.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+});
 
 axios.interceptors.response.use(async response => {
     await sleep(1000);
