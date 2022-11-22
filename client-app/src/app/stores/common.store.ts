@@ -1,19 +1,28 @@
-import {makeAutoObservable} from "mobx";
+import {makeAutoObservable, reaction} from "mobx";
 
 export default class CommonStore {
-    jwtToken: string | null = null;
-    appLoaded = false;
     localStorageTokenKey = 'jwt';
+
+    jwtToken: string | null = window
+        .localStorage
+        .getItem(this.localStorageTokenKey);
+    appLoaded = false;
 
     public constructor() {
         makeAutoObservable(this);
+
+        reaction(
+            () => this.jwtToken,
+                token => {
+                if (token) {
+                    window.localStorage.setItem(this.localStorageTokenKey, token);
+                } else {
+                    window.localStorage.removeItem(this.localStorageTokenKey);
+                }
+        });
     }
 
     public setToken = (token: string | null) => {
-        console.log(token);
-        if (token) {
-            window.localStorage.setItem(this.localStorageTokenKey, token);
-        }
         this.jwtToken = token;
     }
 
