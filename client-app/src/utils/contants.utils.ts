@@ -11,5 +11,8 @@ export const ROUTES = {
     },
     PROFILE: {
         BASE: '/user'
+    },
+    ERROR: {
+        NOT_FOUND: '/not-found'
     }
 }

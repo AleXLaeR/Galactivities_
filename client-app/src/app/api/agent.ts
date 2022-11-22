@@ -3,17 +3,18 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { Activity } from '../../models/Activity.model';
 
 import { toast } from "react-toastify";
-import { redirectTo } from "../../utils/routing.utils";
-import {ROUTES} from "../../utils/contants.utils";
-import {User, UserFormValues} from "../../models/User.model";
+import { history } from "../../index";
+
+import { ROUTES } from "../../utils/contants.utils";
+import { User, UserFormValues } from "../../models/User.model";
+
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
         setTimeout(resolve, delay)
     })
 }
-
-axios.defaults.baseURL = 'http://localhost:5000/api';
 
 axios.interceptors.response.use(async response => {
     await sleep(1000);
@@ -23,12 +24,12 @@ axios.interceptors.response.use(async response => {
     const newData = data as any;
 
     switch (status) {
-        case 400:
+        case StatusCodes.BAD_REQUEST:
             if (typeof data === 'string') {
                 return toast.error(data);
             }
             if (config.method === 'get' && newData.errors.hasOwnProperty('id')) {
-                return redirectTo('not-found');
+                history.push(ROUTES.ERROR.NOT_FOUND);
             }
 
             const { errors } = newData;
@@ -42,14 +43,17 @@ axios.interceptors.response.use(async response => {
                 throw modalStateErrors.flat();
             }
             break;
-        case 404:
-            redirectTo('not-found');
+        case StatusCodes.UNAUTHORIZED:
+            toast.error(ReasonPhrases.UNAUTHORIZED);
             break;
-        case 500:
-            toast.error('server error');
+        case StatusCodes.NOT_FOUND:
+            history.push(ROUTES.ERROR.NOT_FOUND);
+            break;
+        case StatusCodes.INTERNAL_SERVER_ERROR:
+            toast.error(ReasonPhrases.INTERNAL_SERVER_ERROR);
             break;
         default:
-            toast.error('unknown error');
+            toast.error(ReasonPhrases.TOO_MANY_REQUESTS);
             break;
     }
 
