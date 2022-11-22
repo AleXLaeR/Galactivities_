@@ -16,7 +16,7 @@ public class Seed
                 new User { DisplayName = "Jade", UserName = "jade", Email = "jade@test.gmail.com"},
             };
 
-            await Task.WhenAll(users.Select(user => userManager.CreateAsync(user, "Pa$$word")));
+            await Task.WhenAll(users.Select(user => userManager.CreateAsync(user, "Pa$$word123")));
         }
         
         if (context.Activities.Any()) return;
