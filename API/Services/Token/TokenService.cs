@@ -9,6 +9,13 @@ namespace API.Services.Token;
 
 public class TokenService : ITokenService
 {
+    private readonly IConfiguration _config;
+
+    public TokenService(IConfiguration config)
+    {
+        _config = config;
+    }
+    
     public string GetJwtToken(User user)
     {
         var claims = new List<Claim>
@@ -18,7 +25,9 @@ public class TokenService : ITokenService
             new(ClaimTypes.Email, user.Email),
         };
 
-        var ssKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("super secret key"));
+        var ssKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+            _config.GetValue<string>("TokenKey"))
+        );
         var credentials = new SigningCredentials(ssKey, SecurityAlgorithms.HmacSha512Signature);
 
         var tokenHandler = new JwtSecurityTokenHandler();
