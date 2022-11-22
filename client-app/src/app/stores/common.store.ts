@@ -26,7 +26,7 @@ export default class CommonStore {
         this.jwtToken = token;
     }
 
-    public setAppLoading = () => {
+    public setAppLoaded = () => {
         this.appLoaded = true;
     }
 }

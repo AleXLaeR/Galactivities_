@@ -21,11 +21,22 @@ import NotFound from "../routes/NotFound.component";
 import LoginForm from "../authentfication/LoginForm.component";
 
 const App = () => {
-    const { activityStore } = useMobXStore();
+    const { activityStore, commonStore, userStore } = useMobXStore();
 
     useEffect(() => {
         activityStore.fetchActivities().then(() => {});
     }, [activityStore]);
+
+    useEffect(() => {
+        if (commonStore.jwtToken) {
+            userStore.getUser().finally(() => commonStore.setAppLoaded())
+        } else {
+            commonStore.setAppLoaded();
+        }
+    }, [commonStore, userStore]);
+
+    if (!commonStore.appLoaded)
+        return <Spinner content='Loading app...' />
 
     return (
         <>
