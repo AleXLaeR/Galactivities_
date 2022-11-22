@@ -18,6 +18,7 @@ import ActivityDetails from "../activity/details/ActivityDetails.component";
 import ActivityForm from "../form/ActivityForm.component";
 import { ToastContainer } from "react-toastify";
 import NotFound from "../routes/NotFound.component";
+import LoginForm from "../authentfication/LoginForm.component";
 
 const App = () => {
     const { activityStore } = useMobXStore();
@@ -34,10 +35,11 @@ const App = () => {
                     <Routes>
                         <Route index element={<HomePage />}/>
                         <Route path='/' element={<NavBar />}>
+                            <Route path={ROUTES.ACCOUNT.LOGIN} element={<LoginForm />}/>
                             <Route path={ROUTES.ACTIVITIES.LIST} element={<ActivityDashboard />} />
                             <Route path={`${ROUTES.ACTIVITIES.LIST}/:id`} element={<ActivityDetails />}/>
                             <Route path={ROUTES.ACTIVITIES.CREATE} element={<ActivityForm />}/>
-                            <Route path={`${ROUTES.CRUD.EDIT}/:id`} element={<ActivityForm />}/>
+                            <Route path={`${ROUTES.ACTIVITIES.EDIT}/:id`} element={<ActivityForm />}/>
                             <Route path='*' element={<NotFound />}/>
                         </Route>
                     </Routes>
