@@ -1,11 +1,7 @@
-﻿
-using API.Extensions;
+﻿using API.Extensions;
 using API.Middlewares;
-using FluentValidation.AspNetCore;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Persistence;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace API;
 
@@ -21,7 +17,14 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            var policy = new AuthorizationPolicyBuilder()
+                .RequireAuthenticatedUser()
+                .Build();
+
+            options.Filters.Add(new AuthorizeFilter(policy));
+        });
         services.AddApplicationServices(_config);
         services.AddIdentityServices(_config);
     }

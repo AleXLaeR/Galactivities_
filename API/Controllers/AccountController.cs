@@ -1,11 +1,13 @@
 ﻿using API.Services.Token;
 using Domain.DTOs;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
+[AllowAnonymous]
 public class AccountController : BaseApiController
 {
     private readonly UserManager<User> _userManager;
@@ -21,7 +23,7 @@ public class AccountController : BaseApiController
         _signInManager = signInManager;
         _tokenService = tokenService;
     }
-
+    
     [HttpPost("Login")]
     public async Task<ActionResult<UserDto>> Login([FromBody] LoginDto loginDto)
     {
