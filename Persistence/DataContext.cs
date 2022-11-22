@@ -9,7 +9,7 @@ public class DataContext : IdentityDbContext<User>
 {
     public DataContext(DbContextOptions options) : base(options)
     {
-        Database.EnsureCreated();
+        
     }
     
     public DbSet<Activity> Activities { get; set; }
