@@ -4,6 +4,8 @@ import { Activity } from '../../models/Activity.model';
 
 import { toast } from "react-toastify";
 import { redirectTo } from "../../utils/routing.utils";
+import {ROUTES} from "../../utils/contants.utils";
+import {User, UserFormValues} from "../../models/User.model";
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
@@ -64,15 +66,22 @@ const requests = {
 }
 
 const Activities = {
-    list: () => requests.get<Activity[]>('/activities'),
-    details: (id: string) => requests.get<Activity>(`/activities/${id}`),
-    create: (activity: Activity) => requests.post('/activities', activity),
-    update: (activity: Activity) => requests.put(`/activities/${activity.id}`, activity),
-    delete: (id: string) => requests.delete(`/activities/${id}`)
+    list: () => requests.get<Activity[]>(ROUTES.ACTIVITIES.LIST),
+    details: (id: string) => requests.get<Activity>(`${ROUTES.ACTIVITIES.LIST}${id}`),
+    create: (activity: Activity) => requests.post(ROUTES.ACTIVITIES.LIST, activity),
+    update: (activity: Activity) => requests.put(`${ROUTES.ACTIVITIES.LIST}${activity.id}`, activity),
+    delete: (id: string) => requests.delete(`${ROUTES.ACTIVITIES.LIST}${id}`)
+}
+
+const Account = {
+    current: () => requests.get<User>(ROUTES.ACCOUNT.CURRENT_USER),
+    login: (user: UserFormValues) => requests.post(ROUTES.ACCOUNT.LOGIN, user),
+    register: (user: UserFormValues) => requests.post(ROUTES.ACCOUNT.REGISTER, user),
 }
 
 const agent = {
-    Activities
+    Activities,
+    Account,
 }
 
 export default agent;

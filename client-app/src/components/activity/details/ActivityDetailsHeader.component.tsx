@@ -49,7 +49,7 @@ const ActivityDetailedHeader = ({ activity }: Props) => (
             <Button>Cancel attendance</Button>
             <Button
                 as={Link}
-                to={`${ROUTES.CRUD.EDIT}/${activity.id}`}
+                to={`${ROUTES.ACTIVITIES.EDIT}/${activity.id}`}
                 color='orange'
                 floated='right'
             >
