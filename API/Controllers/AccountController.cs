@@ -1,4 +1,5 @@
-﻿using Domain.DTOs;
+﻿using API.Services.Token;
+using Domain.DTOs;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -9,13 +10,16 @@ public class AccountController : BaseApiController
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
+    private readonly ITokenService _tokenService;
 
     public AccountController(
         UserManager<User> userManager,
-        SignInManager<User> signInManager)
+        SignInManager<User> signInManager,
+        ITokenService tokenService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _tokenService = tokenService;
     }
 
     [HttpPost("Login")]
@@ -34,7 +38,7 @@ public class AccountController : BaseApiController
             {
                 DisplayName = currentUser.DisplayName,
                 ImageUri = null,
-                Token = "qwerty",
+                Token = _tokenService.GetJwtToken(currentUser),
                 Username = currentUser.UserName,
             };
         }
