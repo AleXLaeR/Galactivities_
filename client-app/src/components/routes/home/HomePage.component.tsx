@@ -14,6 +14,7 @@ import {
     Segment
 } from "semantic-ui-react";
 import LoginForm from "../../authentfication/LoginForm.component";
+import RegisterForm from "../../authentfication/RegisterForm.component";
 
 const HomePage = () => {
     const { userStore, modalStore } = useMobXStore();
@@ -48,7 +49,7 @@ const HomePage = () => {
                             Login
                         </Button>
                         <Button
-                            onClick={() => modalStore.openModal(<h1>Register</h1>)}
+                            onClick={() => modalStore.openModal(<RegisterForm />)}
                             size='huge'
                             inverted
                         >

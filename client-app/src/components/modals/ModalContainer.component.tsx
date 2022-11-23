@@ -8,7 +8,12 @@ const ModalContainer = () => {
     const { modal: { open: isModalOpen, body }, closeModal } = modalStore;
 
     return (
-        <Modal open={isModalOpen} onClose={closeModal} size='mini'>
+        <Modal
+            open={isModalOpen}
+            onClose={closeModal}
+            size='mini'
+            style={{top: '40%'}}
+        >
             <Modal.Content>{body}</Modal.Content>
         </Modal>
     );

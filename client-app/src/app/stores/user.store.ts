@@ -19,15 +19,29 @@ export default class UserStore {
         return !!this.user;
     }
 
+    public register = async (credentials: UserFormValues) => {
+        try {
+            const user = await agent.Account.register(credentials);
+            this.onLoginOrRegisterEvent(user);
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+
+    private onLoginOrRegisterEvent = (user: User) => {
+        store.commonStore.setToken(user.token);
+
+        runInAction((() => this.user = user));
+        history.push(ROUTES.ACTIVITIES.LIST);
+
+        store.modalStore.closeModal();
+    }
+
     public login = async (credentials: UserFormValues) => {
         try {
             const user = await agent.Account.login(credentials);
-            store.commonStore.setToken(user.token);
-
-            runInAction((() => this.user = user));
-            history.push(ROUTES.ACTIVITIES.LIST);
-
-            store.modalStore.closeModal();
+            this.onLoginOrRegisterEvent(user);
         }
         catch (error) {
             throw error;
@@ -51,5 +65,4 @@ export default class UserStore {
             console.log(error);
         }
     }
-
 }
