@@ -8,6 +8,12 @@ import { Container, Grid } from 'semantic-ui-react';
 import ActivityList from './ActivityList.component';
 import Spinner from "../../helpers/Spinner.component.";
 
+const FilterStyles = {
+    top: '5rem',
+    position: 'sticky',
+    alignSelf: 'flex-start',
+}
+
 const ActivityDashboard = () => {
     const { activityStore } = useMobXStore();
 
@@ -24,7 +30,7 @@ const ActivityDashboard = () => {
                 <Grid.Column width='10'>
                     <ActivityList/>
                 </Grid.Column>
-                <Grid.Column width='6'>
+                <Grid.Column width='6' style={FilterStyles}>
                     <ActivityFilters/>
                 </Grid.Column>
             </Grid>
