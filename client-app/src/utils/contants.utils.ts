@@ -13,6 +13,7 @@ export const ROUTES = {
         BASE: '/user'
     },
     ERROR: {
-        NOT_FOUND: '/not-found'
+        NOT_FOUND: '/not-found',
+        UNAUTHORIZED: '/unauthorized'
     }
 }

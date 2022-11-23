@@ -20,6 +20,7 @@ import { ToastContainer } from "react-toastify";
 import NotFound from "../routes/NotFound.component";
 import LoginForm from "../authentfication/LoginForm.component";
 import ModalContainer from "../modals/ModalContainer.component";
+import Unauthorized from "../routes/Unauthorized.component";
 
 const App = () => {
     const { commonStore, userStore } = useMobXStore();
@@ -43,10 +44,11 @@ const App = () => {
                 <Route index element={<HomePage />}/>
                 <Route path='/' element={<NavBar />}>
                     <Route path={ROUTES.ACCOUNT.LOGIN} element={<LoginForm />}/>
-                    <Route path={ROUTES.ACTIVITIES.LIST} element={<ActivityDashboard />} />
+                    <Route path={ROUTES.ACTIVITIES.LIST} element={<ActivityDashboard />}/>
                     <Route path={`${ROUTES.ACTIVITIES.LIST}/:id`} element={<ActivityDetails />}/>
                     <Route path={ROUTES.ACTIVITIES.CREATE} element={<ActivityForm />}/>
                     <Route path={`${ROUTES.ACTIVITIES.EDIT}/:id`} element={<ActivityForm />}/>
+                    <Route path={ROUTES.ERROR.UNAUTHORIZED} element={<Unauthorized />}/>
                     <Route path='*' element={<NotFound />}/>
                 </Route>
             </Routes>

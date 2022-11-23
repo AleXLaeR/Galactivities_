@@ -57,7 +57,7 @@ axios.interceptors.response.use(async response => {
             }
             break;
         case StatusCodes.UNAUTHORIZED:
-            toast.error(ReasonPhrases.UNAUTHORIZED);
+            history.push(ROUTES.ERROR.UNAUTHORIZED);
             break;
         case StatusCodes.NOT_FOUND:
             history.push(ROUTES.ERROR.NOT_FOUND);
