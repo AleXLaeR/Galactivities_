@@ -1,15 +1,16 @@
 import { observer } from "mobx-react-lite";
 import { useMobXStore } from "../../app/stores/root.store";
 
-import {ErrorMessage, Form, Formik} from "formik";
+import { ErrorMessage, Form, Formik } from "formik";
+
 import TextInput from "../form/FormTextInput.component";
-import {Button, Container, Label} from "semantic-ui-react";
+import { Button, Header, Label } from "semantic-ui-react";
 
 const LoginForm = () => {
     const { userStore } = useMobXStore();
 
     return (
-        <Container style={{marginTop: '6rem'}}>
+        <>
             <Formik initialValues={{
                 email: '',
                 password: '',
@@ -20,6 +21,7 @@ const LoginForm = () => {
             >
                 {({ handleSubmit, isSubmitting, errors }) => (
                     <Form className='ui form' onSubmit={handleSubmit}>
+                        <Header as='h2' content='Login to Reactivities' color='teal' textAlign='center' />
                         <TextInput name='email' placeholder={'Email'} />
                         <TextInput name='password' placeholder={'Password'} type='password' />
                         <ErrorMessage name='error' render={() => (
@@ -41,7 +43,7 @@ const LoginForm = () => {
                     </Form>
                 )}
             </Formik>
-        </Container>
+        </>
     );
 };
 

@@ -26,6 +26,8 @@ export default class UserStore {
 
             runInAction((() => this.user = user));
             history.push(ROUTES.ACTIVITIES.LIST);
+
+            store.modalStore.closeModal();
         }
         catch (error) {
             throw error;
