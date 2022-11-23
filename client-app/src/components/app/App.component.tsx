@@ -19,6 +19,7 @@ import ActivityForm from "../form/ActivityForm.component";
 import { ToastContainer } from "react-toastify";
 import NotFound from "../routes/NotFound.component";
 import LoginForm from "../authentfication/LoginForm.component";
+import ModalContainer from "../modals/ModalContainer.component";
 
 const App = () => {
     const { activityStore, commonStore, userStore } = useMobXStore();
@@ -41,6 +42,7 @@ const App = () => {
     return (
         <>
             <ToastContainer position='bottom-right' hideProgressBar />
+            <ModalContainer />
             {(activityStore.isLoadingInitial) ?
                 <Spinner/> : (
                     <Routes>
