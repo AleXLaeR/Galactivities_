@@ -22,11 +22,7 @@ import LoginForm from "../authentfication/LoginForm.component";
 import ModalContainer from "../modals/ModalContainer.component";
 
 const App = () => {
-    const { activityStore, commonStore, userStore } = useMobXStore();
-
-    useEffect(() => {
-        activityStore.fetchActivities().then(() => {});
-    }, [activityStore]);
+    const { commonStore, userStore } = useMobXStore();
 
     useEffect(() => {
         if (commonStore.jwtToken) {
@@ -43,20 +39,18 @@ const App = () => {
         <>
             <ToastContainer position='bottom-right' hideProgressBar />
             <ModalContainer />
-            {(activityStore.isLoadingInitial) ?
-                <Spinner/> : (
-                    <Routes>
-                        <Route index element={<HomePage />}/>
-                        <Route path='/' element={<NavBar />}>
-                            <Route path={ROUTES.ACCOUNT.LOGIN} element={<LoginForm />}/>
-                            <Route path={ROUTES.ACTIVITIES.LIST} element={<ActivityDashboard />} />
-                            <Route path={`${ROUTES.ACTIVITIES.LIST}/:id`} element={<ActivityDetails />}/>
-                            <Route path={ROUTES.ACTIVITIES.CREATE} element={<ActivityForm />}/>
-                            <Route path={`${ROUTES.ACTIVITIES.EDIT}/:id`} element={<ActivityForm />}/>
-                            <Route path='*' element={<NotFound />}/>
-                        </Route>
-                    </Routes>
-                )}
+            <Routes>
+                <Route index element={<HomePage />}/>
+                <Route path='/' element={<NavBar />}>
+                    <Route path={ROUTES.ACCOUNT.LOGIN} element={<LoginForm />}/>
+                    <Route path={ROUTES.ACTIVITIES.LIST} element={<ActivityDashboard />} />
+                    <Route path={`${ROUTES.ACTIVITIES.LIST}/:id`} element={<ActivityDetails />}/>
+                    <Route path={ROUTES.ACTIVITIES.CREATE} element={<ActivityForm />}/>
+                    <Route path={`${ROUTES.ACTIVITIES.EDIT}/:id`} element={<ActivityForm />}/>
+                    <Route path='*' element={<NotFound />}/>
+                </Route>
+            </Routes>
+
         </>
 
     );
