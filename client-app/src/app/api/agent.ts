@@ -84,10 +84,10 @@ const requests = {
 
 const Activities = {
     list: () => requests.get<Activity[]>(ROUTES.ACTIVITIES.LIST),
-    details: (id: string) => requests.get<Activity>(`${ROUTES.ACTIVITIES.LIST}${id}`),
+    details: (id: string) => requests.get<Activity>(`${ROUTES.ACTIVITIES.LIST}/${id}`),
     create: (activity: Activity) => requests.post(ROUTES.ACTIVITIES.LIST, activity),
-    update: (activity: Activity) => requests.put(`${ROUTES.ACTIVITIES.LIST}${activity.id}`, activity),
-    delete: (id: string) => requests.delete(`${ROUTES.ACTIVITIES.LIST}${id}`)
+    update: (activity: Activity) => requests.put(`${ROUTES.ACTIVITIES.LIST}/${activity.id}`, activity),
+    delete: (id: string) => requests.delete(`${ROUTES.ACTIVITIES.LIST}/${id}`)
 }
 
 const Account = {
