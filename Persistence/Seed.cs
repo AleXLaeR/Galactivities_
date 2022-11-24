@@ -16,7 +16,10 @@ public class Seed
                 new User { DisplayName = "Jade", UserName = "jade", Email = "jade@test.gmail.com"},
             };
 
-            await Task.WhenAll(users.Select(user => userManager.CreateAsync(user, "Pa$$word123")));
+            foreach (var user in users)
+            {
+                await userManager.CreateAsync(user, "Pa$$word123");
+            }
         }
         
         if (context.Activities.Any()) return;
