@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Junctions;
 
 namespace Domain.Entities;
 
@@ -26,4 +27,6 @@ public class Activity
     
     [Required]
     public string Venue { get; set; }
+
+    public List<ActivityAttendee> Attendees { get; set; } = new();
 }
