@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
-using API.Services.Token;
 using Domain.DTOs;
 using Domain.Entities;
+using Infrastructure.Interfaces.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
