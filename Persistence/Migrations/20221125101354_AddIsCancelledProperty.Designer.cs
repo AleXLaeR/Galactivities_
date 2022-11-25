@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221125091226_AddActiveProperty")]
-    partial class AddActiveProperty
+    [Migration("20221125101354_AddIsCancelledProperty")]
+    partial class AddIsCancelledProperty
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,7 +41,7 @@ namespace Persistence.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool>("IsCancelled")
                         .HasColumnType("bit");
 
                     b.Property<string>("Location")

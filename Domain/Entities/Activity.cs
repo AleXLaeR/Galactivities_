@@ -28,7 +28,7 @@ public class Activity
     [Required]
     public string Venue { get; set; }
     
-    public bool IsActive { get; set; }
+    public bool IsCancelled { get; set; }
 
     public List<ActivityAttendee> Attendees { get; set; } = new();
 }

@@ -5,13 +5,13 @@
 namespace Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class AddActiveProperty : Migration
+    public partial class AddIsCancelledProperty : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<bool>(
-                name: "IsActive",
+                name: "IsCancelled",
                 schema: "production",
                 table: "activities",
                 type: "bit",
@@ -23,7 +23,7 @@ namespace Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsActive",
+                name: "IsCancelled",
                 schema: "production",
                 table: "activities");
         }
