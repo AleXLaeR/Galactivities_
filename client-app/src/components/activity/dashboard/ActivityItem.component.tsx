@@ -40,21 +40,28 @@ const ActivityItem = ({ activity }: Props) => {
                             <Item.Description>
                                 Hosted by {activity.host?.displayName}
                             </Item.Description>
-                            {(activity.isHost || activity.isGoing) && (
+                            {activity.isHost && (
                                 <Item.Description>
                                     <Label basic color='orange'>
-                                        You are {(activity.isHost) ? 'hosting this' : 'going to'} activity
+                                        You are hosting this activity
+                                    </Label>
+                                </Item.Description>
+                            )}
+                            {(activity.isGoing && !activity.isHost) && (
+                                <Item.Description>
+                                    <Label basic color='green'>
+                                        You are going to this activity
                                     </Label>
                                 </Item.Description>
                             )}
                         </Item.Content>
                     </Item>
                 </Item.Group>
-                    <Item>
+                    <Item style={{width: '40%'}}>
                         <Item.Image
                             size='small'
                             rounded
-                            style={{width: '200px'}}
+                            style={{float: 'right', width: '70%'}}
                             src={`/assets/categoryImages/${activity.category}.jpg`}
                         />
                     </Item>
