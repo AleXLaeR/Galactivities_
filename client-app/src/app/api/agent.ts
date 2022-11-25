@@ -92,7 +92,7 @@ const Activities = {
     create: (activity: Activity) => requests.post(ROUTES.ACTIVITIES.LIST, activity),
     update: (activity: Activity) => requests.put(`${ROUTES.ACTIVITIES.LIST}/${activity.id}`, activity),
     delete: (id: string) => requests.delete(`${ROUTES.ACTIVITIES.LIST}/${id}`),
-    attend: (id: string) => requests.post(`${ROUTES.ACTIVITIES.LIST}/${id}/${ROUTES.ACTIVITIES.ATTEND}`, {})
+    attend: (id: string) => requests.post(`${ROUTES.ACTIVITIES.LIST}/${id}${ROUTES.ACTIVITIES.ATTEND}`, {})
 }
 
 const Account = {
