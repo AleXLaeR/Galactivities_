@@ -41,7 +41,12 @@ const ActivityItem = ({ activity }: Props) => {
                 )}
                 <Item.Group>
                     <Item>
-                        <Item.Image size='tiny' circular src='/assets/user.png' />
+                        <Item.Image
+                            style={{marginBottom: '.4rem'}}
+                            size='tiny'
+                            circular
+                            src='/assets/user.png'
+                        />
                         <Item.Content>
                             <Item.Header as={Link} to={`${ROUTES.ACTIVITIES.LIST}/${activity.id}`}>
                                 {activity.title}
