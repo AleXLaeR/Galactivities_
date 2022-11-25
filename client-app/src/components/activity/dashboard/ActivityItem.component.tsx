@@ -10,6 +10,7 @@ import { observer } from "mobx-react-lite";
 import { format } from 'date-fns';
 
 import { Button, Icon, Item, Segment } from "semantic-ui-react";
+import ActivityAttendees from "./ActivityAttendees.component";
 
 interface Props {
     activity: Activity,
@@ -52,8 +53,8 @@ const ActivityItem = ({ activity }: Props) => {
                     <div><Icon name='marker'/> {activity.venue}, {activity.location}</div>
                 </span>
             </Segment>
-            <Segment secondary>
-                Attendees go here
+            <Segment secondary compact>
+                <ActivityAttendees attendees={activity.attendees} />
             </Segment>
             <Segment clearing>
                 <span>{activity.description}</span>
