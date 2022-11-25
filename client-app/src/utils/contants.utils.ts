@@ -2,7 +2,8 @@ export const ROUTES = {
     ACTIVITIES: {
         LIST: '/activities',
         CREATE: '/create',
-        EDIT: '/manage'
+        EDIT: '/manage',
+        ATTEND: '/attend'
     },
     ACCOUNT: {
         CURRENT_USER: '/account',
@@ -10,7 +11,8 @@ export const ROUTES = {
         REGISTER: '/account/register'
     },
     PROFILE: {
-        BASE: '/user'
+        BASE: '/profiles',
+        CURRENT_USER: '/user'
     },
     ERROR: {
         NOT_FOUND: '/not-found',

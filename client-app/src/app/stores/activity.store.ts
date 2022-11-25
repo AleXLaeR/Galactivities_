@@ -6,6 +6,7 @@ import agent from "../api/agent";
 import { format } from "date-fns";
 
 import { store } from "./root.store";
+import {UserProfile} from "../../models/UserProfile.model";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
@@ -133,5 +134,34 @@ export default class ActivityStore {
 
     public onEditClickAction = () => {
         this.setEditMode(!this.isEditMode);
+    }
+
+    public updateAttendance = async () => {
+        const user = store.userStore.user!;
+        this.isLoadingInitial = true;
+
+        try {
+            await agent.Activities.attend(this.selectedActivity!.id);
+            runInAction(() => {
+                if (this.selectedActivity?.isGoing) {
+                    this.selectedActivity.attendees =
+                        this.selectedActivity.attendees?.filter(
+                            a => a.username !== user.username
+                        );
+                    this.selectedActivity.isGoing = false;
+                } else {
+                    const attendee = new UserProfile(user);
+                    this.selectedActivity?.attendees?.push(attendee);
+                    this.selectedActivity!.isGoing = true;
+                }
+                this.activityRegistry.set(this.selectedActivity!.id, this.selectedActivity!);
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            runInAction(() => this.isLoadingInitial = false);
+        }
     }
 }
