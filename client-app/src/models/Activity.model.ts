@@ -8,9 +8,9 @@ export type Activity = {
     category: string;
     location: string;
     venue: string;
-    hostUsername: string;
-    isCancelled: boolean;
-    attendees: UserProfile[];
+    hostUsername?: string;
+    isCancelled?: boolean;
+    attendees?: UserProfile[];
 }
 
 export const DEFAULT_STATE: Activity = {
@@ -21,7 +21,4 @@ export const DEFAULT_STATE: Activity = {
     category: '',
     location: '',
     venue: '',
-    hostUsername: '',
-    isCancelled: false,
-    attendees: [],
 }

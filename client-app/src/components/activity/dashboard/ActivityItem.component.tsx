@@ -54,7 +54,7 @@ const ActivityItem = ({ activity }: Props) => {
                 </span>
             </Segment>
             <Segment secondary compact>
-                <ActivityAttendees attendees={activity.attendees} />
+                <ActivityAttendees attendees={activity.attendees!} />
             </Segment>
             <Segment clearing>
                 <span>{activity.description}</span>
