@@ -30,6 +30,15 @@ const ActivityItem = ({ activity }: Props) => {
     return (
         <Segment.Group>
             <Segment style={{display: 'flex', justifyContent: 'space-between', marginBottom: '-1rem'}}>
+                {activity.isCancelled && (
+                    <Label
+                        size='large'
+                        attached='top'
+                        color='red'
+                        content='Cancelled'
+                        style={{textAlign: 'center'}}
+                    />
+                )}
                 <Item.Group>
                     <Item>
                         <Item.Image size='tiny' circular src='/assets/user.png' />
@@ -57,11 +66,12 @@ const ActivityItem = ({ activity }: Props) => {
                         </Item.Content>
                     </Item>
                 </Item.Group>
-                    <Item style={{width: '40%'}}>
+                    <Item style={{width: '40%', marginTop: activity.isCancelled ? '2rem' : '0'}}>
                         <Item.Image
                             size='small'
                             rounded
-                            style={{float: 'right', width: '70%'}}
+                            floated='right'
+                            style={{width: '70%'}}
                             src={`/assets/categoryImages/${activity.category}.jpg`}
                         />
                     </Item>

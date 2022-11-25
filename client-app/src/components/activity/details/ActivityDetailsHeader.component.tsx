@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import { Activity } from "../../../models/Activity.model";
 
-import { Button, Header, Item, Segment, Image } from 'semantic-ui-react';
+import {Button, Header, Item, Segment, Image, Label} from 'semantic-ui-react';
 import {Link} from "react-router-dom";
 import {ROUTES} from "../../../utils/contants.utils";
 import {format} from "date-fns";
@@ -27,12 +27,20 @@ interface Props {
 
 const ActivityDetailedHeader = ({ activity }: Props) => {
     const { activityStore } = useMobXStore();
-    const { isLoadingInitial, updateAttendance } = activityStore;
+    const { isLoadingInitial, updateAttendance, cancelActivityToggle } = activityStore;
 
     return (
         <Segment.Group>
             <Segment basic attached='top' style={{border: '6px double teal'}}>
-                <Image src={`/assets/categoryImages/${activity.category}.jpg`} fluid style={activityImageStyle}/>
+                {activity.isCancelled && (
+                    <Label
+                        style={{position: 'absolute', zIndex: '100', left: '-1rem', top: '1.25rem'}}
+                        ribbon
+                        color='red'
+                        content='Cancelled'
+                    />
+                )}
+                <Image src={`/assets/categoryImages/${activity.category}.jpg`} fluid style={activityImageStyle} />
                 <Segment style={activityImageTextStyle} basic>
                     <Item.Group>
                         <Item>
@@ -57,19 +65,42 @@ const ActivityDetailedHeader = ({ activity }: Props) => {
             </Segment>
             <Segment clearing attached='bottom'>
                 {activity.isHost ? (
-                    <Button
-                        as={Link}
-                        to={`${ROUTES.ACTIVITIES.EDIT}/${activity.id}`}
-                        color='orange'
-                        floated='right'
-                    >
-                        Manage Event
-                    </Button>
+                    <>
+                        <Button
+                            basic
+                            floated='left'
+                            color={activity.isCancelled ? 'green' : 'red'}
+                            content={(activity.isCancelled ? 'Re-activate' : 'Cancel')  + ' Activity'}
+                            onClick={cancelActivityToggle}
+                            loading={isLoadingInitial}
+                        />
+                        <Button
+                            disabled={activity.isCancelled}
+                            as={Link}
+                            to={`${ROUTES.ACTIVITIES.EDIT}/${activity.id}`}
+                            color='orange'
+                            floated='right'
+                        >
+                            Manage Event
+                        </Button>
+                    </>
                 ) : (
                     activity.isGoing ? (
-                        <Button loading={isLoadingInitial} onClick={updateAttendance}>Cancel attendance</Button>
+                        <Button
+                            loading={isLoadingInitial}
+                            onClick={updateAttendance}
+                        >
+                            Cancel attendance
+                        </Button>
                     ) : (
-                        <Button loading={isLoadingInitial} onClick={updateAttendance} color='teal'>Join Activity</Button>
+                        <Button
+                            disabled={activity.isCancelled}
+                            loading={isLoadingInitial}
+                            onClick={updateAttendance}
+                            color='teal'
+                        >
+                            Join Activity
+                        </Button>
                     )
                 )}
             </Segment>

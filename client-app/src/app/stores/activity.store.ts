@@ -124,7 +124,9 @@ export default class ActivityStore {
             const activityId = activity.id!;
             let updatedActivity = {...this.activityRegistry.get(activityId), ...activity};
 
-            this.activityRegistry.set(activityId, updatedActivity as Activity);
+            const asActivity = updatedActivity as Activity;
+            this.activityRegistry.set(activityId, asActivity);
+            this.selectedActivity = asActivity;
         });
     }
 
@@ -137,6 +139,21 @@ export default class ActivityStore {
             this.activityRegistry.delete(id);
             this.setSubmitMode(false);
         });
+    }
+
+    public cancelActivityToggle = async () => {
+        this.isLoadingInitial = true;
+        try {
+            await agent.Activities.attend(this.selectedActivity!.id);
+            runInAction(() => {
+                this.selectedActivity!.isCancelled = !this.selectedActivity?.isCancelled;
+                this.activityRegistry.set(this.selectedActivity!.id, this.selectedActivity!);
+            })
+        } catch (error) {
+            console.log(error);
+        } finally {
+            runInAction(() => this.isLoadingInitial = false);
+        }
     }
 
     public onEditClickAction = () => {
