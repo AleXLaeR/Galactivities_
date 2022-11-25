@@ -30,5 +30,5 @@ public class ActivityDto
     
     public string HostUsername { get; set; }
 
-    public List<UserProfile> Profiles { get; set; }
+    public List<UserProfile> Attendees { get; set; }
 }
