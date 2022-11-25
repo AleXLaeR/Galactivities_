@@ -38,23 +38,35 @@ const ActivityDetailedHeader = ({ activity }: Props) => (
                                 style={{color: 'white'}}
                             />
                             <p>{format(activity.date, 'dd MMM yyyy h:mm aa')}</p>
-                            <p>Hosted by <strong>Bob</strong></p>
+                            <p>Hosted by
+                                <strong>
+                                    <Link to={`profiles/${activity.host?.username}`} >
+                                        {' ' + activity.host?.displayName}
+                                    </Link>
+                                </strong>
+                            </p>
                         </Item.Content>
                     </Item>
                 </Item.Group>
             </Segment>
         </Segment>
         <Segment clearing attached='bottom'>
-            <Button color='teal'>Join Activity</Button>
-            <Button>Cancel attendance</Button>
-            <Button
-                as={Link}
-                to={`${ROUTES.ACTIVITIES.EDIT}/${activity.id}`}
-                color='orange'
-                floated='right'
-            >
-                Manage Event
-            </Button>
+            {activity.isHost ? (
+                <Button
+                    as={Link}
+                    to={`${ROUTES.ACTIVITIES.EDIT}/${activity.id}`}
+                    color='orange'
+                    floated='right'
+                >
+                    Manage Event
+                </Button>
+            ) : (
+                activity.isGoing ? (
+                    <Button>Cancel attendance</Button>
+                ) : (
+                    <Button color='teal'>Join Activity</Button>
+                )
+            )}
         </Segment>
     </Segment.Group>
 );
