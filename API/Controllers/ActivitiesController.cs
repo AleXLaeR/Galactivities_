@@ -1,4 +1,5 @@
 ﻿using Application.Activities;
+using Application.Attendance;
 using Domain;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -35,5 +36,11 @@ public class ActivitiesController : BaseApiController
     public async Task<IActionResult> DeleteActivity([FromRoute] Guid id)
     {
         return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
+    }
+
+    [HttpPost("{id:guid}/attend")]
+    public async Task<IActionResult> Attend([FromRoute] Guid id)
+    {
+        return HandleResult(await Mediator.Send(new UpdateAttendance.Command() { Id = id }));
     }
 }
