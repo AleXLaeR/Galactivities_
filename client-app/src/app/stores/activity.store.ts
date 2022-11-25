@@ -12,15 +12,23 @@ export default class ActivityStore {
     isSubmitMode: boolean = false;
     isLoadingInitial: boolean = false;
 
+    private currentLength: number = 0;
+
     public constructor() {
         makeAutoObservable(this);
     }
 
     public fetchActivities = async () => {
-        this.setLoadingInitial(true);
+        if (this.currentLength === 0 ||
+            this.activityRegistry.size !== this.currentLength) {
+            this.setLoadingInitial(true);
+        }
         try {
             const activities = await agent.Activities.list();
-            runInAction(() => activities.forEach(this.addActivity));
+            runInAction(() => {
+                activities.forEach(this.addActivity);
+                this.currentLength = activities.length;
+            });
         }
         catch (error: any) {
             console.log(error);
