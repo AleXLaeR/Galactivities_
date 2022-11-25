@@ -20,7 +20,7 @@ const NavBar = () => {
                 <Container>
                     <Menu.Item as={NavLink} to='/' header>
                         <img src="/assets/logo.png" alt="logo" style={{marginRight: '10px'}}/>
-                        Reactivities
+                        Galactivities
                     </Menu.Item>
                     <Menu.Item as={NavLink} to={ROUTES.ACTIVITIES.LIST} name='Activities'/>
                     <Menu.Item>
