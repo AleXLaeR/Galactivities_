@@ -30,7 +30,7 @@ public class ActivityDto
     
     public string HostUsername { get; set; }
     
-    public bool IsActive { get; set; }
+    public bool IsCancelled { get; set; }
 
     public List<UserProfile> Attendees { get; set; }
 }
