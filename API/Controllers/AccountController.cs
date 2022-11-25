@@ -26,6 +26,7 @@ public class AccountController : BaseApiController
         _tokenService = tokenService;
     }
     
+    // TODO fix unwanted redirection on login
     [HttpPost("Login")]
     public async Task<ActionResult<UserDto>> Login([FromBody] LoginDto loginDto)
     {
