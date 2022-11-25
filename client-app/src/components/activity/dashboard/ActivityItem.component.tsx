@@ -9,7 +9,7 @@ import { observer } from "mobx-react-lite";
 
 import { format } from 'date-fns';
 
-import { Button, Icon, Item, Segment } from "semantic-ui-react";
+import {Button, Icon, Item, Label, Segment} from "semantic-ui-react";
 import ActivityAttendees from "./ActivityAttendees.component";
 
 interface Props {
@@ -34,17 +34,29 @@ const ActivityItem = ({ activity }: Props) => {
                     <Item>
                         <Item.Image size='tiny' circular src='/assets/user.png' />
                         <Item.Content>
-                            <Item.Header as={Link} to={`${ROUTES.ACTIVITIES.LIST}${activity.id}`}>
+                            <Item.Header as={Link} to={`${ROUTES.ACTIVITIES.LIST}/${activity.id}`}>
                                 {activity.title}
                             </Item.Header>
                             <Item.Description>
-                                Hosted by Bob
+                                Hosted by {activity.host?.displayName}
                             </Item.Description>
+                            {(activity.isHost || activity.isGoing) && (
+                                <Item.Description>
+                                    <Label basic color='orange'>
+                                        You are {(activity.isHost) ? 'hosting this' : 'going to'} activity
+                                    </Label>
+                                </Item.Description>
+                            )}
                         </Item.Content>
                     </Item>
                 </Item.Group>
                     <Item>
-                        <Item.Image size='small' rounded style={{width: '200px'}} src={`/assets/categoryImages/${activity.category}.jpg`}/>
+                        <Item.Image
+                            size='small'
+                            rounded
+                            style={{width: '200px'}}
+                            src={`/assets/categoryImages/${activity.category}.jpg`}
+                        />
                     </Item>
             </Segment>
             <Segment>

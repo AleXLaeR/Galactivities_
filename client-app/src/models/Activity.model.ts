@@ -10,6 +10,9 @@ export type Activity = {
     venue: string;
     hostUsername?: string;
     isCancelled?: boolean;
+    isGoing?: boolean;
+    isHost?: boolean;
+    host?: UserProfile;
     attendees?: UserProfile[];
 }
 
