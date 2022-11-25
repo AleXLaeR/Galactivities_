@@ -43,10 +43,10 @@ const ActivityDetails = ({ newActivity }: Props) => {
                 <Grid.Column width={10}>
                     <ActivityDetailedHeader activity={activity} />
                     <ActivityDetailedInfo activity={activity} />
-                    <ActivityDetailedChat/>
+                    <ActivityDetailedChat />
                 </Grid.Column>
                 <Grid.Column width={6}>
-                    <ActivityDetailedSideBar />
+                    <ActivityDetailedSideBar attendees={activity.attendees} />
                 </Grid.Column>
             </Grid>
         </Container>
