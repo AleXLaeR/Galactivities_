@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
-import { Activity } from "../../models/Activity.model";
+import {Activity, ActivityFormValues} from "../../models/Activity.model";
 import agent from "../api/agent";
 
 import { format } from "date-fns";
@@ -106,18 +106,25 @@ export default class ActivityStore {
         this.isSubmitMode = state;
     }
 
-    public createActivity = async (activity: Activity) => {
+    public createActivity = async (activity: ActivityFormValues) => {
+        const user = store.userStore.user!;
         await agent.Activities.create(activity);
-        runInAction(() => {
-            this.activityRegistry.set(activity.id, activity);
-        });
+
+        const newActivity = new Activity(activity);
+        newActivity.hostUsername = user.username;
+        newActivity.attendees = [new UserProfile(user)];
+
+        this.addActivity(newActivity);
     }
 
-    public updateActivity = async (activity: Activity) => {
+    public updateActivity = async (activity: ActivityFormValues) => {
         await agent.Activities.update(activity);
+
         runInAction(() => {
-            this.activityRegistry.delete(activity.id);
-            this.activityRegistry.set(activity.id, activity);
+            const activityId = activity.id!;
+            let updatedActivity = {...this.activityRegistry.get(activityId), ...activity};
+
+            this.activityRegistry.set(activityId, updatedActivity as Activity);
         });
     }
 

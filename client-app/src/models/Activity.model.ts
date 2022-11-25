@@ -1,6 +1,6 @@
 import { UserProfile } from "./UserProfile.model";
 
-export type Activity = {
+export interface Activity {
     id: string;
     title: string;
     date: Date;
@@ -8,20 +8,38 @@ export type Activity = {
     category: string;
     location: string;
     venue: string;
-    hostUsername?: string;
+    hostUsername: string;
     isCancelled?: boolean;
-    isGoing?: boolean;
-    isHost?: boolean;
+    isGoing: boolean;
+    isHost: boolean;
     host?: UserProfile;
-    attendees?: UserProfile[];
+    attendees: UserProfile[];
 }
 
-export const DEFAULT_STATE: Activity = {
-    id: '',
-    title: '',
-    date: new Date(),
-    description: '',
-    category: '',
-    location: '',
-    venue: '',
+export class Activity implements Activity {
+    public constructor(init?: ActivityFormValues) {
+        Object.assign(this, init);
+    }
+}
+
+export class ActivityFormValues {
+    id?: string;
+    title: string = '';
+    category: string = '';
+    description: string = '';
+    date: Date | null = new Date();
+    location: string = '';
+    venue: string = '';
+
+    public constructor(activity?: Activity) {
+        if (activity) {
+            this.id = activity.id;
+            this.title = activity.title;
+            this.category = activity.category;
+            this.description = activity.description;
+            this.date = activity.date;
+            this.location = activity.location;
+            this.venue = activity.venue;
+        }
+    }
 }
