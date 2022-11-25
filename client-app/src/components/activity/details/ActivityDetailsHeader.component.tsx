@@ -5,6 +5,7 @@ import { Button, Header, Item, Segment, Image } from 'semantic-ui-react';
 import {Link} from "react-router-dom";
 import {ROUTES} from "../../../utils/contants.utils";
 import {format} from "date-fns";
+import {useMobXStore} from "../../../app/stores/root.store";
 
 const activityImageStyle = {
     filter: 'brightness(30%)',
@@ -24,51 +25,56 @@ interface Props {
     activity: Activity
 }
 
-const ActivityDetailedHeader = ({ activity }: Props) => (
-    <Segment.Group>
-        <Segment basic attached='top' style={{border: '6px double teal'}}>
-            <Image src={`/assets/categoryImages/${activity.category}.jpg`}  fluid style={activityImageStyle}/>
-            <Segment style={activityImageTextStyle} basic>
-                <Item.Group>
-                    <Item>
-                        <Item.Content>
-                            <Header
-                                size='huge'
-                                content={activity.title}
-                                style={{color: 'white'}}
-                            />
-                            <p>{format(activity.date, 'dd MMM yyyy h:mm aa')}</p>
-                            <p>Hosted by
-                                <strong>
-                                    <Link to={`profiles/${activity.host?.username}`} >
-                                        {' ' + activity.host?.displayName}
-                                    </Link>
-                                </strong>
-                            </p>
-                        </Item.Content>
-                    </Item>
-                </Item.Group>
+const ActivityDetailedHeader = ({ activity }: Props) => {
+    const { activityStore } = useMobXStore();
+    const { isLoadingInitial, updateAttendance } = activityStore;
+
+    return (
+        <Segment.Group>
+            <Segment basic attached='top' style={{border: '6px double teal'}}>
+                <Image src={`/assets/categoryImages/${activity.category}.jpg`} fluid style={activityImageStyle}/>
+                <Segment style={activityImageTextStyle} basic>
+                    <Item.Group>
+                        <Item>
+                            <Item.Content>
+                                <Header
+                                    size='huge'
+                                    content={activity.title}
+                                    style={{color: 'white'}}
+                                />
+                                <p>{format(activity.date, 'dd MMM yyyy h:mm aa')}</p>
+                                <p>Hosted by
+                                    <strong>
+                                        <Link to={`profiles/${activity.host?.username}`}>
+                                            {' ' + activity.host?.displayName}
+                                        </Link>
+                                    </strong>
+                                </p>
+                            </Item.Content>
+                        </Item>
+                    </Item.Group>
+                </Segment>
             </Segment>
-        </Segment>
-        <Segment clearing attached='bottom'>
-            {activity.isHost ? (
-                <Button
-                    as={Link}
-                    to={`${ROUTES.ACTIVITIES.EDIT}/${activity.id}`}
-                    color='orange'
-                    floated='right'
-                >
-                    Manage Event
-                </Button>
-            ) : (
-                activity.isGoing ? (
-                    <Button>Cancel attendance</Button>
+            <Segment clearing attached='bottom'>
+                {activity.isHost ? (
+                    <Button
+                        as={Link}
+                        to={`${ROUTES.ACTIVITIES.EDIT}/${activity.id}`}
+                        color='orange'
+                        floated='right'
+                    >
+                        Manage Event
+                    </Button>
                 ) : (
-                    <Button color='teal'>Join Activity</Button>
-                )
-            )}
-        </Segment>
-    </Segment.Group>
-);
+                    activity.isGoing ? (
+                        <Button loading={isLoadingInitial} onClick={updateAttendance}>Cancel attendance</Button>
+                    ) : (
+                        <Button loading={isLoadingInitial} onClick={updateAttendance} color='teal'>Join Activity</Button>
+                    )
+                )}
+            </Segment>
+        </Segment.Group>
+    );
+};
 
 export default observer(ActivityDetailedHeader);
