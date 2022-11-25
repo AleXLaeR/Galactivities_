@@ -1,32 +1,22 @@
 import { useEffect } from 'react';
 import { useParams } from "react-router-dom";
 
-import { Activity } from '../../../models/Activity.model';
-
 import { useMobXStore } from "../../../app/stores/root.store";
 import { observer } from "mobx-react-lite";
 
 import { Container, Grid } from 'semantic-ui-react';
-import Spinner from "../../helpers/Spinner.component.";
 
 import ActivityDetailedHeader from "./ActivityDetailsHeader.component";
 import ActivityDetailedInfo from "./ActivityDetailsInfo.component";
 import ActivityDetailedChat from "./ActivityDetailedChat.component";
 import ActivityDetailedSideBar from "./ActivityDetailedSideBar.component";
 
-interface Props {
-    newActivity?: Activity;
-}
 
-const ActivityDetails = ({ newActivity }: Props) => {
+const ActivityDetails = () => {
     const { activityStore } = useMobXStore();
-    let { selectedActivity: activity, fetchActivity, isLoadingInitial } = activityStore;
+    let { selectedActivity: activity, fetchActivity } = activityStore;
 
     const { id } = useParams<{id: string}>();
-
-    if (newActivity) {
-        activity = newActivity;
-    }
 
     useEffect(() => {
         if (id) {
@@ -34,8 +24,7 @@ const ActivityDetails = ({ newActivity }: Props) => {
         }
     }, [id, fetchActivity]);
 
-    if (isLoadingInitial || !activity)
-        return <Spinner content='Loading activity...' />;
+    if (!activity) return null;
 
     return (
         <Container style={{marginTop: '6rem'}}>
