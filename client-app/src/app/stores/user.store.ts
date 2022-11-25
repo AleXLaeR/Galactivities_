@@ -38,6 +38,7 @@ export default class UserStore {
         store.modalStore.closeModal();
     }
 
+    // TODO fix unwanted redirection on login
     public login = async (credentials: UserFormValues) => {
         try {
             const user = await agent.Account.login(credentials);

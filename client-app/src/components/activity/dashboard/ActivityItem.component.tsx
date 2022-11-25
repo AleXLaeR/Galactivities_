@@ -9,7 +9,8 @@ import { observer } from "mobx-react-lite";
 
 import { format } from 'date-fns';
 
-import { Button, Icon, Item, Segment } from "semantic-ui-react";
+import {Button, Icon, Item, Label, Segment} from "semantic-ui-react";
+import ActivityAttendees from "./ActivityAttendees.component";
 
 interface Props {
     activity: Activity,
@@ -29,21 +30,55 @@ const ActivityItem = ({ activity }: Props) => {
     return (
         <Segment.Group>
             <Segment style={{display: 'flex', justifyContent: 'space-between', marginBottom: '-1rem'}}>
+                {activity.isCancelled && (
+                    <Label
+                        size='large'
+                        attached='top'
+                        color='red'
+                        content='Cancelled'
+                        style={{textAlign: 'center'}}
+                    />
+                )}
                 <Item.Group>
                     <Item>
-                        <Item.Image size='tiny' circular src='/assets/user.png' />
+                        <Item.Image
+                            style={{marginBottom: '.4rem'}}
+                            size='tiny'
+                            circular
+                            src='/assets/user.png'
+                        />
                         <Item.Content>
-                            <Item.Header as={Link} to={`${ROUTES.ACTIVITIES.LIST}${activity.id}`}>
+                            <Item.Header as={Link} to={`${ROUTES.ACTIVITIES.LIST}/${activity.id}`}>
                                 {activity.title}
                             </Item.Header>
                             <Item.Description>
-                                Hosted by Bob
+                                Hosted by {activity.host?.displayName}
                             </Item.Description>
+                            {activity.isHost && (
+                                <Item.Description>
+                                    <Label basic color='orange'>
+                                        You are hosting this activity
+                                    </Label>
+                                </Item.Description>
+                            )}
+                            {(activity.isGoing && !activity.isHost) && (
+                                <Item.Description>
+                                    <Label basic color='green'>
+                                        You are going to this activity
+                                    </Label>
+                                </Item.Description>
+                            )}
                         </Item.Content>
                     </Item>
                 </Item.Group>
-                    <Item>
-                        <Item.Image size='small' rounded style={{width: '200px'}} src={`/assets/categoryImages/${activity.category}.jpg`}/>
+                    <Item style={{width: '40%', marginTop: activity.isCancelled ? '2rem' : '0'}}>
+                        <Item.Image
+                            size='small'
+                            rounded
+                            floated='right'
+                            style={{width: '70%'}}
+                            src={`/assets/categoryImages/${activity.category}.jpg`}
+                        />
                     </Item>
             </Segment>
             <Segment>
@@ -52,8 +87,8 @@ const ActivityItem = ({ activity }: Props) => {
                     <div><Icon name='marker'/> {activity.venue}, {activity.location}</div>
                 </span>
             </Segment>
-            <Segment secondary>
-                Attendees go here
+            <Segment secondary compact>
+                <ActivityAttendees attendees={activity.attendees!} />
             </Segment>
             <Segment clearing>
                 <span>{activity.description}</span>

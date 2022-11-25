@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { generateNextGuid } from "../../utils/guid.utils";
 
-import {Activity, DEFAULT_STATE} from '../../models/Activity.model';
+import { ActivityFormValues } from '../../models/Activity.model';
 import { ROUTES } from "../../utils/contants.utils";
 import { categoryOptions } from "../../models/Categories.model";
 
@@ -27,7 +27,7 @@ const ActivityForm = () => {
     const navigate = useNavigate();
     const { id } = useParams<{id: string}>();
 
-    const [activity, setActivity] = useState(DEFAULT_STATE);
+    const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues());
 
     const validationSchema = Yup.object({
         title: Yup.string().required('The activity title is required'),
@@ -39,13 +39,13 @@ const ActivityForm = () => {
 
     useEffect(() => {
         if (id)
-            fetchActivity(id).then(act => setActivity(act!));
+            fetchActivity(id).then(a => setActivity(new ActivityFormValues(a)));
     }, [id, fetchActivity]);
 
-    const handleFormSubmit = async (activity: Activity) => {
+    const handleFormSubmit = async (activity: ActivityFormValues) => {
         setSubmitMode(true);
 
-        if (activity.id.length === 0) {
+        if (!activity.id) {
             activity.id = generateNextGuid();
             await createActivity(activity);
         } else {
