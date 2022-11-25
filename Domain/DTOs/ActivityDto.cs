@@ -29,6 +29,8 @@ public class ActivityDto
     public string Venue { get; set; }
     
     public string HostUsername { get; set; }
+    
+    public bool IsActive { get; set; }
 
     public List<UserProfile> Attendees { get; set; }
 }
