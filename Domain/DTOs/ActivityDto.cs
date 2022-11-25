@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Entities.Junctions;
+using Domain.Entities;
+using Domain.Entities.Profiles;
 
-namespace Domain.Entities;
+namespace Domain.DTOs;
 
-[Table("activities", Schema = "production")]
-public class Activity
+public class ActivityDto
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,7 +28,9 @@ public class Activity
     [Required]
     public string Venue { get; set; }
     
-    public bool IsCancelled { get; set; }
+    public string HostUsername { get; set; }
+    
+    public bool IsActive { get; set; }
 
-    public List<ActivityAttendee> Attendees { get; set; } = new();
+    public List<UserProfile> Attendees { get; set; }
 }

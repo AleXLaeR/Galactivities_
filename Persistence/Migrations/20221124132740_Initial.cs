@@ -14,6 +14,9 @@ namespace Persistence.Migrations
             migrationBuilder.EnsureSchema(
                 name: "production");
 
+            migrationBuilder.EnsureSchema(
+                name: "junctions");
+
             migrationBuilder.CreateTable(
                 name: "activities",
                 schema: "production",
@@ -90,6 +93,33 @@ namespace Persistence.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "activity_user",
+                schema: "junctions",
+                columns: table => new
+                {
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsHost = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_activity_user", x => new { x.UserId, x.ActivityId });
+                    table.ForeignKey(
+                        name: "FK_activity_user_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_activity_user_activities_ActivityId",
+                        column: x => x.ActivityId,
+                        principalSchema: "production",
+                        principalTable: "activities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -180,6 +210,12 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_activity_user_ActivityId",
+                schema: "junctions",
+                table: "activity_user",
+                column: "ActivityId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -223,8 +259,8 @@ namespace Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "activities",
-                schema: "production");
+                name: "activity_user",
+                schema: "junctions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -240,6 +276,10 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "activities",
+                schema: "production");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

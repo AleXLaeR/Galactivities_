@@ -3,9 +3,10 @@ using System.Security.Claims;
 using System.Text;
 using Domain.Entities;
 using Domain.Enums;
+using Infrastructure.Interfaces.Services;
 using Microsoft.IdentityModel.Tokens;
 
-namespace API.Services.Token;
+namespace API.Services;
 
 public class TokenService : ITokenService
 {

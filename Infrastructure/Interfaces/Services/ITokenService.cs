@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace API.Services.Token;
+namespace Infrastructure.Interfaces.Services;
 
 public interface ITokenService
 {
