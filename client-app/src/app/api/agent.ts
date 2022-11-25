@@ -59,6 +59,10 @@ axios.interceptors.response.use(async response => {
         case StatusCodes.UNAUTHORIZED:
             history.push(ROUTES.ERROR.UNAUTHORIZED);
             break;
+        case StatusCodes.FORBIDDEN:
+            toast.error(ReasonPhrases.FORBIDDEN);
+            setTimeout(() => store.activityStore.setSubmitMode(false), 500);
+            break;
         case StatusCodes.NOT_FOUND:
             history.push(ROUTES.ERROR.NOT_FOUND);
             break;
