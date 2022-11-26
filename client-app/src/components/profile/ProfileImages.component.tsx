@@ -2,7 +2,7 @@ import {Button, Card, Grid, Header, Image, Tab} from "semantic-ui-react";
 import {ProfileImage} from "../../models/Image.model";
 import {useMobXStore} from "../../app/stores/root.store";
 import {useState} from "react";
-import ImageUploadWidget from "../images/ImageUploadWidget.component";
+import ImageUploadWidget from "../image-upload/ImageUploadWidget.component";
 
 interface Props {
     images: ProfileImage[];
