@@ -3,6 +3,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { UserProfile } from "../../models/UserProfile.model";
 
 import Agent from "../api/agent";
+import {store} from "./root.store";
 
 export default class ProfileStore {
     profile: UserProfile | null = null;
@@ -25,5 +26,12 @@ export default class ProfileStore {
         finally {
             runInAction(() => this.isLoading = false);
         }
+    }
+
+    public get isCurrentStoredUser() {
+        if (store.userStore.user && this.profile) {
+            return store.userStore.user.username === this.profile.username;
+        }
+        return false;
     }
 }
