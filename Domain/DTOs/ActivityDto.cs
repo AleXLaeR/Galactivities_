@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Entities;
-using Domain.Entities.Profiles;
 
 namespace Domain.DTOs;
 
@@ -32,5 +30,5 @@ public class ActivityDto
     
     public bool IsCancelled { get; set; }
 
-    public List<UserProfile> Attendees { get; set; }
+    public List<AttendeeDto> Attendees { get; set; }
 }
