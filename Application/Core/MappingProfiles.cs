@@ -20,8 +20,21 @@ public class MappingProfiles : Profile
             );
         
         CreateMap<ActivityAttendee, UserProfile>()
-            .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.User.DisplayName))
-            .ForMember(d => d.Username, o => o.MapFrom(s => s.User.UserName))
-            .ForMember(d => d.Biography, o => o.MapFrom(s => s.User.Biography));
+            .ForMember(d => d.DisplayName, 
+                o => o.MapFrom(s =>
+                    s.User.DisplayName)
+            )
+            .ForMember(d => d.Username, 
+                o => o.MapFrom(s =>
+                    s.User.UserName)
+            )
+            .ForMember(d => d.Biography, 
+                o => o.MapFrom(s =>
+                    s.User.Biography)
+            );
+
+        CreateMap<User, UserProfile>()
+            .ForMember(d => d.ImageUri, o => o.MapFrom(s =>
+                s.Images.FirstOrDefault(i => i.IsMain)!.Uri));
     }
 }
