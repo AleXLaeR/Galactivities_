@@ -7,13 +7,17 @@ interface Props {
     profile: UserProfile;
 }
 
+const borderRadStyle = {
+    borderRadius: '6px'
+}
+
 const ProfileContent = ({ profile }: Props) => {
     const panes = [
-        { menuItem: 'About', render: () => <Tab.Pane>About</Tab.Pane> },
+        { menuItem: 'About', render: () => <Tab.Pane style={borderRadStyle}>About</Tab.Pane> },
         { menuItem: 'Photos', render: () => <ProfileImages images={profile.images} /> },
-        { menuItem: 'Events', render: () => <Tab.Pane>Events</Tab.Pane> },
-        { menuItem: 'Followers', render: () => <Tab.Pane>Followers</Tab.Pane> },
-        { menuItem: 'Following', render: () => <Tab.Pane>Following</Tab.Pane> },
+        { menuItem: 'Events', render: () => <Tab.Pane style={borderRadStyle}>Events</Tab.Pane> },
+        { menuItem: 'Followers', render: () => <Tab.Pane style={borderRadStyle}>Followers</Tab.Pane> },
+        { menuItem: 'Following', render: () => <Tab.Pane style={borderRadStyle}>Following</Tab.Pane> },
     ];
 
     return (

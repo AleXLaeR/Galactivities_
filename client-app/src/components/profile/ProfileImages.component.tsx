@@ -14,7 +14,7 @@ const ProfileImages = ({ images }: Props) => {
     const { profileStore: { isCurrentStoredUser } } = useMobXStore();
 
     return (
-        <Tab.Pane>
+        <Tab.Pane style={{borderRadius: '6px'}}>
             <Grid>
                 <Grid.Column width={16}>
                     <Header floated='left' icon='image' content='Photos' />
@@ -45,7 +45,7 @@ const ProfileImages = ({ images }: Props) => {
                                     as='h3'
                                     content='Nothing to show here'
                                     textAlign='center'
-                                    style={{marginTop: '3.5rem'}}
+                                    style={{marginTop: '1rem'}}
                                 />
                             )}
                         </>
