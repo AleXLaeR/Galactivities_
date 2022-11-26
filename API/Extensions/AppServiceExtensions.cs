@@ -2,6 +2,7 @@
 using Application.Core;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Common;
 using Infrastructure.Common.Security;
 using Infrastructure.Interfaces;
 using Infrastructure.Photos;
@@ -45,6 +46,8 @@ public static class AppServiceExtensions
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
         
         services.AddScoped<IUserAccessor, UserAccessor>();
+        
         services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+        services.AddScoped<IImageAccessor, ImageAccessor>();
     }
 }
