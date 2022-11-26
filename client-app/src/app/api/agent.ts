@@ -10,6 +10,7 @@ import { store } from "../stores/root.store";
 import { ROUTES } from "../../utils/contants.utils";
 
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import {UserProfile} from "../../models/UserProfile.model";
 
 
 const sleep = (delay: number) => {
@@ -101,9 +102,14 @@ const Account = {
     register: (user: UserFormValues) => requests.post<User>(ROUTES.ACCOUNT.REGISTER, user),
 }
 
+const Profiles = {
+    get: (username: string) => requests.get<UserProfile>(`${ROUTES.PROFILE.BASE}/${username}`),
+}
+
 const agent = {
     Activities,
     Account,
+    Profiles,
 }
 
 export default agent;
