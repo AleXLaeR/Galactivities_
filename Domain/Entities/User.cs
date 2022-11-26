@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Images;
 using Domain.Entities.Junctions;
 using Microsoft.AspNetCore.Identity;
 
@@ -12,4 +13,6 @@ public class User : IdentityUser
     public string? Biography { get; set; }
     
     public List<ActivityAttendee> Activities { get; set; } = new();
+
+    public List<Image> Images { get; set; } = new();
 }

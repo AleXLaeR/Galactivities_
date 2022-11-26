@@ -2,8 +2,10 @@
 using Application.Core;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Infrastructure.Common;
 using Infrastructure.Common.Security;
 using Infrastructure.Interfaces;
+using Infrastructure.Photos;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -42,7 +44,10 @@ public static class AppServiceExtensions
         
         services.AddMediatR(typeof(List.Handler).Assembly);
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
-
+        
         services.AddScoped<IUserAccessor, UserAccessor>();
+        
+        services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+        services.AddScoped<IImageAccessor, ImageAccessor>();
     }
 }

@@ -30,7 +30,9 @@ public class AccountController : BaseApiController
     [HttpPost("Login")]
     public async Task<ActionResult<UserDto>> Login([FromBody] LoginDto loginDto)
     {
-        var currentUser = await _userManager.FindByEmailAsync(loginDto.Email);
+        var currentUser = await _userManager.Users
+            .Include(u => u.Images)
+            .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
         if (currentUser is null)
             return Unauthorized($"Sorry, but E-Mail {loginDto.Email} does not exist in our database");
@@ -81,10 +83,13 @@ public class AccountController : BaseApiController
 
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<UserDto>> GetCurrentUser()
+    public async Task<ActionResult<UserDto?>> GetCurrentUser()
     {
-        var user = await _userManager.FindByEmailAsync(User.FindFirstValue(ClaimTypes.Email));
-        return CreateUserDtoFrom(user);
+        var user = await _userManager.Users
+            .Include(u => u.Images)
+            .FirstOrDefaultAsync(u => u.Email == User.FindFirstValue(ClaimTypes.Email));
+        
+        return (user is null) ? null : CreateUserDtoFrom(user);
     }
 
     [NonAction]
@@ -93,7 +98,7 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             DisplayName = user.DisplayName,
-            ImageUri = default,
+            ImageUri = user.Images.FirstOrDefault(i => i.IsMain)?.Uri,
             Token = _tokenService.GetJwtToken(user),
             Username = user.UserName,
         };
