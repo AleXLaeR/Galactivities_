@@ -30,7 +30,12 @@ const NavBar = () => {
                         <Image src={user?.imageUri || DEFAULT_USER_IMAGE_URI} avatar spaced='right'/>
                         <Dropdown pointing='top left' text={user?.displayName}>
                             <Dropdown.Menu>
-                                <Dropdown.Item as={Link} to={ROUTES.PROFILE.CURRENT_USER} text='My Profile' icon='user' />
+                                <Dropdown.Item
+                                    as={Link}
+                                    to={`${ROUTES.PROFILE.BASE}/${user?.username}`}
+                                    text='My Profile'
+                                               con='user'
+                                />
                                 <Dropdown.Item onClick={logout} text='Logout' icon='power' />
                             </Dropdown.Menu>
                         </Dropdown>
