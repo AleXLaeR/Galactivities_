@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Images;
 using Domain.Entities.Junctions;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,8 @@ public class DataContext : IdentityDbContext<User>
     public DbSet<Activity> Activities { get; set; }
 
     public DbSet<ActivityAttendee> ActivityAttendees { get; set; }
+
+    public DbSet<Image> Images { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
