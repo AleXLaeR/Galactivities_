@@ -1,10 +1,12 @@
 import { User } from "./User.model";
+import {Image} from "./Image.model";
 
 export interface UserProfile {
     username: string;
     displayName: string;
     imageUri?: string;
     biography?: string;
+    images?: Image[];
 }
 
 export class UserProfile implements UserProfile {
