@@ -42,5 +42,27 @@ public class MappingProfiles : Profile
                 o => o.MapFrom(s =>
                 s.Images.FirstOrDefault(i => i.IsMain)!.Uri)
             );
+
+        CreateMap<ActivityAttendee, UserActivityDto>()
+            .ForMember(d => d.Id, 
+                o => o.MapFrom(s =>
+                    s.Activity.Id)
+            )
+            .ForMember(d => d.Title, 
+                o => o.MapFrom(s =>
+                    s.Activity.Title)
+            )
+            .ForMember(d => d.Date, 
+                o => o.MapFrom(s =>
+                    s.Activity.Date)
+            )
+            .ForMember(d => d.Category, 
+                o => o.MapFrom(s =>
+                    s.Activity.Category)
+            )
+            .ForMember(d => d.HostUsername, 
+                o => o.MapFrom(s =>
+                    s.Activity.Attendees.FirstOrDefault(aa => aa.IsHost)!.User.UserName)
+            );
     }
 }
