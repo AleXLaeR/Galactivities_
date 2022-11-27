@@ -1,0 +1,28 @@
+.cropper-drag-box, .cropper-wrap-box {
+  border-radius: 6px;
+}
+
+.cropper-view-box {
+  border-radius: 50%;
+}
+
+.cropper-face {
+  background-color: inherit !important;
+}
+
+.cropper-dashed {
+  display: none !important;
+}
+
+.img-preview {
+  height: 200px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border-radius: 6px;
+  margin-left: .75rem;
+  border: 2px inset teal;
+}
+
+.ui.button {
+  padding: 0.78571429em 1.5em 0.78571429em !important;
+}

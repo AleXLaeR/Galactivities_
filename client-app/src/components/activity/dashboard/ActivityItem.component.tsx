@@ -45,14 +45,17 @@ const ActivityItem = ({ activity }: Props) => {
                             style={{marginBottom: '.4rem'}}
                             size='tiny'
                             circular
-                            src='/assets/user.png'
+                            src={activity.host?.imageUri || '/assets/user.png'}
                         />
                         <Item.Content>
                             <Item.Header as={Link} to={`${ROUTES.ACTIVITIES.LIST}/${activity.id}`}>
                                 {activity.title}
                             </Item.Header>
                             <Item.Description>
-                                Hosted by {activity.host?.displayName}
+                                {'Hosted by '}
+                                <Link to={`${ROUTES.PROFILE.BASE}/${activity.host?.username}`} style={{textDecoration: 'underline'}}>
+                                    {activity.host?.displayName}
+                                </Link>
                             </Item.Description>
                             {activity.isHost && (
                                 <Item.Description>

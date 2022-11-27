@@ -21,6 +21,7 @@ import NotFound from "../routes/NotFound.component";
 import LoginForm from "../authentfication/LoginForm.component";
 import ModalContainer from "../modals/ModalContainer.component";
 import Unauthorized from "../routes/Unauthorized.component";
+import ProfilePage from "../profile/ProfilePage.component";
 
 const App = () => {
     const { commonStore, userStore } = useMobXStore();
@@ -46,6 +47,7 @@ const App = () => {
                     <Route path={ROUTES.ACCOUNT.LOGIN} element={<LoginForm />}/>
                     <Route path={ROUTES.ACTIVITIES.LIST} element={<ActivityDashboard />}/>
                     <Route path={`${ROUTES.ACTIVITIES.LIST}/:id`} element={<ActivityDetails />}/>
+                    <Route path={`${ROUTES.PROFILE.BASE}/:username`} element={<ProfilePage />}/>
                     <Route path={ROUTES.ACTIVITIES.CREATE} element={<ActivityForm />}/>
                     <Route path={`${ROUTES.ACTIVITIES.EDIT}/:id`} element={<ActivityForm />}/>
                     <Route path={ROUTES.ERROR.UNAUTHORIZED} element={<Unauthorized />}/>

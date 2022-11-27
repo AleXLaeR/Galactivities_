@@ -66,4 +66,10 @@ export default class UserStore {
             console.log(error);
         }
     }
+
+    public setImage = (imageUri: string) => {
+        if (this.user) {
+            this.user.imageUri = imageUri;
+        }
+    }
 }

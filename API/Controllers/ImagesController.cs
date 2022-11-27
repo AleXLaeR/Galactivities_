@@ -1,4 +1,5 @@
-﻿using Application.Images;
+﻿using System.Net;
+using Application.Images;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -11,14 +12,14 @@ public class ImagesController : BaseApiController
         return HandleResult(await Mediator.Send(command));
     }
 
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete([FromRoute] Guid id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete([FromRoute] string id)
     {
         return HandleResult(await Mediator.Send(new Delete.Command { Id = id }));
     }
 
-    [HttpPost("{id:guid}/[action]")]
-    public async Task<IActionResult> SetMain([FromRoute] Guid id)
+    [HttpPost("{id}/[action]")]
+    public async Task<IActionResult> SetMain([FromRoute] string id)
     {
         return HandleResult(await Mediator.Send(new SetMain.Command { Id = id }));
     }
