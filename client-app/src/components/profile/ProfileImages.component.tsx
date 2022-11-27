@@ -1,21 +1,40 @@
 import {Button, Card, Grid, Header, Image, Tab} from "semantic-ui-react";
 import {ProfileImage} from "../../models/Image.model";
 import {useMobXStore} from "../../app/stores/root.store";
-import {useState} from "react";
+import {SyntheticEvent, useState} from "react";
 import ImageUploadWidget from "../image-upload/ImageUploadWidget.component";
+import {observer} from "mobx-react-lite";
+import {UserProfile} from "../../models/UserProfile.model";
 
 interface Props {
-    images: ProfileImage[];
+    profile: UserProfile;
 }
 
-const ProfileImages = ({ images }: Props) => {
+const ProfileImages = ({ profile: { images } }: Props) => {
     const [addPhotoMode, setAddPhotoMode] = useState(false);
+    const [target, setTarget] = useState('');
 
     const { profileStore } = useMobXStore();
-    const { isCurrentStoredUser, uploadImage, isUploading } = profileStore;
+    const {
+        isCurrentStoredUser,
+        uploadImage,
+        isUploading,
+        setMainImage,
+        deleteImage,
+    } = profileStore;
 
     const handleImageUpload = (file: Blob) => {
         uploadImage(file).then(() => setAddPhotoMode(false));
+    }
+
+    const handleSetMainImage = async (image: ProfileImage, e: SyntheticEvent<HTMLButtonElement>) => {
+        setTarget(e.currentTarget.name);
+        await setMainImage(image);
+    }
+
+    const handleImageDelete = async (image: ProfileImage, e: SyntheticEvent<HTMLButtonElement>) => {
+        setTarget(e.currentTarget.name);
+        await deleteImage(image);
     }
 
     return (
@@ -42,6 +61,28 @@ const ProfileImages = ({ images }: Props) => {
                                     {images.map(image => (
                                         <Card key={image.id}>
                                             <Image src={image.uri || '/assets/user.png'}/>
+                                            {isCurrentStoredUser && (
+                                                <Button.Group fluid widths={2}>
+                                                    <Button
+                                                        basic
+                                                        color='green'
+                                                        content='Main'
+                                                        name={'main' + image.id}
+                                                        disabled={image.isMain}
+                                                        loading={(target === 'main' + image.id) && isUploading}
+                                                        onClick={e => handleSetMainImage(image, e)}
+                                                    />
+                                                    <Button
+                                                        basic
+                                                        color='red'
+                                                        icon='trash'
+                                                        name={image.id}
+                                                        disabled={image.isMain}
+                                                        loading={target === image.id && isUploading}
+                                                        onClick={(e) => handleImageDelete(image, e)}
+                                                    />
+                                                </Button.Group>
+                                            )}
                                         </Card>
                                     ))}
                                 </Card.Group>
@@ -61,5 +102,5 @@ const ProfileImages = ({ images }: Props) => {
     );
 };
 
-export default ProfileImages;
+export default observer(ProfileImages);
 

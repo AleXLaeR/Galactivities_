@@ -14,7 +14,7 @@ const borderRadStyle = {
 const ProfileContent = ({ profile }: Props) => {
     const panes = [
         { menuItem: 'About', render: () => <Tab.Pane style={borderRadStyle}>About</Tab.Pane> },
-        { menuItem: 'Photos', render: () => <ProfileImages images={profile.images} /> },
+        { menuItem: 'Photos', render: () => <ProfileImages profile={profile} /> },
         { menuItem: 'Events', render: () => <Tab.Pane style={borderRadStyle}>Events</Tab.Pane> },
         { menuItem: 'Followers', render: () => <Tab.Pane style={borderRadStyle}>Followers</Tab.Pane> },
         { menuItem: 'Following', render: () => <Tab.Pane style={borderRadStyle}>Following</Tab.Pane> },

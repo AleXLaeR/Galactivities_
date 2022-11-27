@@ -113,7 +113,9 @@ const Profiles = {
         return requests.postWithHeaders<ProfileImage>(ROUTES.IMAGES.BASE, formData, {
             headers: { 'Content-Type': 'multipart/form-data' }
         })
-    }
+    },
+    setMain: (id: string) => requests.post(`${ROUTES.IMAGES.BASE}/${id}/setMain`, {}),
+    deleteImage: (id: string) => requests.delete(`${ROUTES.IMAGES.BASE}/${id}`),
 }
 
 const agent = {

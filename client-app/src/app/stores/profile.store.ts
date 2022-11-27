@@ -5,6 +5,7 @@ import { UserProfile } from "../../models/UserProfile.model";
 import Agent from "../api/agent";
 import {store} from "./root.store";
 import agent from "../api/agent";
+import {ProfileImage} from "../../models/Image.model";
 
 export default class ProfileStore {
     profile: UserProfile | null = null;
@@ -51,6 +52,52 @@ export default class ProfileStore {
                         store.userStore.setImage(image.uri);
                         this.profile.imageUri = image.uri
                     }
+                }
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            runInAction(() => this.isUploading = false);
+        }
+    }
+
+    public deleteImage = async (image: ProfileImage) => {
+        this.isUploading = true;
+
+        try {
+            await agent.Profiles.deleteImage(image.id);
+
+            runInAction(() => {
+                if (this.profile && this.profile.images) {
+                    this.profile.images = this.profile.images.filter(
+                        i => i.id !== image.id
+                    );
+                }
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            runInAction(() => this.isUploading = false);
+        }
+    }
+
+    public setMainImage = async (image: ProfileImage) => {
+        this.isUploading = true;
+
+        try {
+            await agent.Profiles.setMain(image.id);
+
+            store.userStore.setImage(image.uri);
+            runInAction(() => {
+                if (this.profile && this.profile.images) {
+                    this.profile.images.find(i => i.isMain)!.isMain = false;
+                    this.profile.images.find(i => i.id === image.id)!.isMain = true;
+
+                    this.profile.imageUri = image.uri;
                 }
             });
         }

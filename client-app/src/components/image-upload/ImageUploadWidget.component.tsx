@@ -15,10 +15,7 @@ const ImageUploadWidget = ({ uploadImage, loading }: Props) => {
     const onCrop = () => {
         if (cropper) {
             cropper.getCroppedCanvas().toBlob(
-                blob => {
-                    console.log(blob);
-                    uploadImage(blob!);
-                }
+                blob => uploadImage(blob!)
             );
         }
     }
@@ -48,8 +45,7 @@ const ImageUploadWidget = ({ uploadImage, loading }: Props) => {
                 {files && files.length !== 0 && (
                     <>
                         <div className='img-preview' />
-                        <Button onClick={() => setFiles([...files, ])} content='default' />
-                        <ButtonGroup widths={1}>
+                        <ButtonGroup widths={2}>
                             <Button onClick={onCrop} positive icon='check' loading={loading} />
                             <Button onClick={() => setFiles([])} icon='close' disabled={loading} />
                         </ButtonGroup>
