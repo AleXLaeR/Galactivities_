@@ -11,7 +11,12 @@ interface Props {
 const ProfileImages = ({ images }: Props) => {
     const [addPhotoMode, setAddPhotoMode] = useState(false);
 
-    const { profileStore: { isCurrentStoredUser } } = useMobXStore();
+    const { profileStore } = useMobXStore();
+    const { isCurrentStoredUser, uploadImage, isUploading } = profileStore;
+
+    const handleImageUpload = (file: Blob) => {
+        uploadImage(file).then(() => setAddPhotoMode(false));
+    }
 
     return (
         <Tab.Pane style={{borderRadius: '6px'}}>
@@ -29,7 +34,7 @@ const ProfileImages = ({ images }: Props) => {
                 </Grid.Column>
                 <Grid.Column width={16}>
                     {addPhotoMode ? (
-                        <ImageUploadWidget />
+                        <ImageUploadWidget uploadImage={handleImageUpload} loading={isUploading} />
                     ) : (
                         <>
                             {(images?.length !== 0) ? (

@@ -11,6 +11,7 @@ import { ROUTES } from "../../utils/contants.utils";
 
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import {UserProfile} from "../../models/UserProfile.model";
+import {ProfileImage} from "../../models/Image.model";
 
 
 const sleep = (delay: number) => {
@@ -83,6 +84,8 @@ const responseBody = <T> (response: AxiosResponse<T>) => response.data;
 const requests = {
     get: <T> (url: string) => axios.get<T>(url).then(responseBody),
     post: <T> (url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
+    postWithHeaders: <T> (url: string, body: {}, headers: {}) =>
+        axios.post<T>(url, body, headers).then(responseBody),
     put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
 }
@@ -104,6 +107,13 @@ const Account = {
 
 const Profiles = {
     get: (username: string) => requests.get<UserProfile>(`${ROUTES.PROFILE.BASE}/${username}`),
+    uploadImage: (file: Blob) => {
+        let formData = new FormData();
+        formData.append('File', file);
+        return requests.postWithHeaders<ProfileImage>(ROUTES.IMAGES.BASE, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' }
+        })
+    }
 }
 
 const agent = {

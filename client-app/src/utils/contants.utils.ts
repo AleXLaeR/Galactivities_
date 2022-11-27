@@ -14,6 +14,9 @@ export const ROUTES = {
         BASE: '/profiles',
         CURRENT_USER: '/user'
     },
+    IMAGES: {
+        BASE: '/images'
+    },
     ERROR: {
         NOT_FOUND: '/not-found',
         UNAUTHORIZED: '/unauthorized'
