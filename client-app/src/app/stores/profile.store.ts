@@ -122,6 +122,8 @@ export default class ProfileStore {
                     store.userStore.setDisplayName(profile.displayName);
                 }
 
+                console.log(this.profile);
+
                 this.profile = {...this.profile, ...profile as UserProfile};
             });
         }

@@ -10,7 +10,7 @@ public class Edit
 {
     public class Command : IRequest<Result<Unit>>
     {
-        public string DisplayName { get; set; }
+        public string displayName { get; set; }
 
         public string? Biography { get; set; }
     }
@@ -28,7 +28,7 @@ public class Edit
         
         public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
-            if (String.IsNullOrEmpty(request.DisplayName))
+            if (String.IsNullOrEmpty(request.displayName))
                 return Result.Fail(new Error("Display Name cannot be empty"));
             
             var user = await _context.Users
@@ -38,7 +38,7 @@ public class Edit
             if (user is null)
                 return Result.Fail(new Error("Cannot find a user"));
             
-            user.DisplayName = request.DisplayName;
+            user.DisplayName = request.displayName;
             user.Biography = request.Biography ?? user.Biography;
 
             var resultIsSuccess = await _context.SaveChangesAsync(cancellationToken) > 0;
