@@ -5,6 +5,7 @@ import {SyntheticEvent, useState} from "react";
 import ImageUploadWidget from "../image-upload/ImageUploadWidget.component";
 import {observer} from "mobx-react-lite";
 import {UserProfile} from "../../models/UserProfile.model";
+import Viewer from "react-viewer";
 
 interface Props {
     profile: UserProfile;
@@ -13,6 +14,7 @@ interface Props {
 const ProfileImages = ({ profile: { images } }: Props) => {
     const [addPhotoMode, setAddPhotoMode] = useState(false);
     const [target, setTarget] = useState('');
+    const [visible, setVisible] = useState(false);
 
     const { profileStore } = useMobXStore();
     const {
@@ -58,9 +60,18 @@ const ProfileImages = ({ profile: { images } }: Props) => {
                         <>
                             {(images?.length !== 0) ? (
                                 <Card.Group itemsPerRow={5}>
+                                    <Viewer
+                                        visible={visible}
+                                        onClose={() => setVisible(false)}
+                                        images={images.map(image => ({src: image.uri}))}
+                                    />
                                     {images.map(image => (
                                         <Card key={image.id}>
-                                            <Image src={image.uri || '/assets/user.png'}/>
+                                            <Image
+                                                src={image.uri || '/assets/user.png'}
+                                                style={{cursor: 'pointer'}}
+                                                onClick={() => setVisible(true)}
+                                            />
                                             {isCurrentStoredUser && (
                                                 <Button.Group fluid widths={2}>
                                                     <Button
