@@ -72,4 +72,10 @@ export default class UserStore {
             this.user.imageUri = imageUri;
         }
     }
+
+    public setDisplayName = (displayName: string) => {
+        if (this.user) {
+            this.user.displayName = displayName;
+        }
+    }
 }

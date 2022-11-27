@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "../../utils/contants.utils";
 import { UserProfile } from "../../models/UserProfile.model";
 
-import {Button, ButtonGroup, Card, Icon, Image} from "semantic-ui-react";
+import {Button, ButtonGroup, Card, Divider, Icon, Image} from "semantic-ui-react";
 
 interface Props {
     profile: UserProfile;
@@ -30,8 +30,9 @@ const ProfileCard = ({ profile }: Props) => (
         <Card.Content>
             <Card.Header>{profile.displayName}</Card.Header>
             <Card.Description>
-
+                {profile.biography?.substring(0, 30)}
             </Card.Description>
+            <Divider />
             <Card.Content extra>
                 <Icon name='pencil' />
                 10 followers
