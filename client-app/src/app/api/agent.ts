@@ -107,6 +107,7 @@ const Account = {
 
 const Profiles = {
     get: (username: string) => requests.get<UserProfile>(`${ROUTES.PROFILE.BASE}/${username}`),
+    update: (profile: Partial<UserProfile>) => requests.put(ROUTES.PROFILE.BASE, profile),
     uploadImage: (file: Blob) => {
         let formData = new FormData();
         formData.append('File', file);
