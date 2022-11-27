@@ -10,7 +10,7 @@ public class SetMain
 {
     public class Command : IRequest<Result<Unit>>
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
     }
 
     public class Handler : IRequestHandler<Command, Result<Unit>>
@@ -38,11 +38,11 @@ public class SetMain
             if (imageToSet is null)
                 return Result.Fail(new Error("Cannot find an image"));
 
-            var mainImage = user.Images.SingleOrDefault(i => i.IsMain);
+            var mainImage = user.Images.FirstOrDefault(i => i.IsMain);
 
             if (mainImage is not null)
             {
-                imageToSet.IsMain = false;
+                mainImage.IsMain = false;
             }
             imageToSet.IsMain = true;
             
