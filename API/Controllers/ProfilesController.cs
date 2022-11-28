@@ -19,12 +19,13 @@ public class ProfilesController : BaseApiController
     }
     
     [HttpGet("{username}/activities")]
-    public async Task<IActionResult> GetUserActivities(string username, string? filter)
+    public async Task<IActionResult> GetUserActivities([FromRoute] string username,
+        [FromQuery] ProfileActivityFilter filter)
     {
         return HandleResult(await Mediator.Send(new ListActivities.Query
         {
             Username = username,
-            Filter = GetEnumValueOrDefault<ProfileActivityFilter>(filter) 
+            Filter = filter
         }));
     }
 
