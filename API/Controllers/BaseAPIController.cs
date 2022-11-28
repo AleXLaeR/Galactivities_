@@ -1,4 +1,6 @@
-﻿using FluentResults;
+﻿using API.Extensions;
+using Application.Core;
+using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +19,28 @@ public class BaseApiController : ControllerBase
     {
         if (result.IsSuccess)
         {
-            return (result.Value is null) ? NotFound("Found result matching null") : Ok(result.Value);
+            return (result.Value is null) ?
+                NotFound("Found result matching null") : Ok(result.Value);
         }
 
         return BadRequest(result.Reasons);
+    }
+    
+    protected ActionResult HandlePagedResult<T>(Result<PagedList<T>> result)
+    {
+        if (!result.IsSuccess)
+            return BadRequest(result.Reasons);
+
+        if (result.Value is null)
+            return NotFound("Found result matching null");
+        
+        Response.AddPaginationHeader(
+            result.Value!.CurrentPage,
+            result.Value.PageSize,
+            result.Value.TotalCount,
+            result.Value.TotalPages
+        );
+        
+        return Ok(result.Value);
     }
 }

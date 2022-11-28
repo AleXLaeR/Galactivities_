@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import {makeAutoObservable, reaction, runInAction} from "mobx";
 
 import {Activity, ActivityFormValues} from "../../models/Activity.model";
 import agent from "../api/agent";
@@ -6,37 +6,118 @@ import agent from "../api/agent";
 import { format } from "date-fns";
 
 import { store } from "./root.store";
-import {UserProfile} from "../../models/UserProfile.model";
+import { UserProfile } from "../../models/UserProfile.model";
+import { Pagination, PagingParams } from "../../models/pagination";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
     selectedActivity: Activity | undefined = undefined;
-    isEditMode: boolean = false;
-    isSubmitMode: boolean = false;
-    isLoadingInitial: boolean = false;
+
+    isEditMode = false;
+    isSubmitMode = false;
+    isLoadingInitial = false;
+
+    pagination: Pagination | null = null;
+    pagingParams = new PagingParams();
+
+    filter = new Map().set('all', true);
+    sorting = 'date';
 
     private currentLength: number = 0;
 
     public constructor() {
         makeAutoObservable(this);
+
+        reaction(() => this.filter.keys(),
+            () => {
+                this.pagingParams = new PagingParams();
+                this.activityRegistry.clear();
+                this.fetchActivities().then();
+            })
+        ;
+        reaction(() => this.sorting,
+            () => {
+                this.pagingParams = new PagingParams();
+                this.activityRegistry.clear();
+                this.fetchActivities().then();
+            })
+        ;
     }
 
-    public fetchActivities = async () => {
+    public setPagingParams = (pagingParams: PagingParams) => {
+        this.pagingParams = pagingParams;
+    }
+
+    public setFilter = (filter: string, value?: any) => {
+        const resetFilter = () => {
+            this.filter.forEach((value, key) => {
+                if (key !== 'startDate') this.filter.delete(key);
+            })
+        }
+
+        console.log(filter)
+
+        switch (filter) {
+            case 'all':
+                resetFilter();
+                this.filter.set('all', value);
+                break;
+            case 'isGoing':
+                resetFilter();
+                this.filter.set('isGoing', value);
+                break;
+            case 'isHost':
+                resetFilter();
+                this.filter.set('isHost', value);
+                break;
+            case 'startDate':
+                this.filter.delete('startDate');
+                this.filter.set('startDate', value);
+                break;
+        }
+    }
+
+    public setSorting = (sortBy: string) => {
+        this.sorting = sortBy;
+    }
+
+    private get axiosParams() {
+        const params = new URLSearchParams();
+
+        params.append('pageNumber', this.pagingParams.pageNumber.toString());
+        params.append('pageSize', this.pagingParams.pageSize.toString());
+
+        this.filter.forEach((value, key) =>
+            params.append(key, (key === 'startDate') ?
+                (value as Date).toISOString() : value)
+        );
+        params.append('Filter', this.sorting);
+
+        return params;
+    }
+
+    public fetchActivities = async (isLoading = true) => {
         if (this.currentLength === 0 ||
             this.activityRegistry.size !== this.currentLength) {
-            this.setLoadingInitial(true);
+            this.setLoadingInitial(isLoading);
         }
         try {
-            const activities = await agent.Activities.list();
-            runInAction(() => {
-                activities.forEach(this.addActivity);
-                this.currentLength = activities.length;
+            const result = await agent.Activities.list(this.axiosParams);
+            result.data.forEach(this.addActivity);
+
+            runInAction(() =>  {
+                this.setPagination(result.pagination);
+                this.currentLength = result.data.length;
             });
         }
         catch (error: any) {
             console.log(error);
         }
         this.setLoadingInitial(false);
+    }
+
+    public setPagination = (pagination: Pagination) => {
+        this.pagination = pagination;
     }
 
     public fetchActivity = async (id: string) => {
@@ -79,15 +160,14 @@ export default class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
     }
 
-    get activitiesByDate() {
-        return Array.from(this.activityRegistry.values()).sort((a, b) =>
-            a.date.getTime() - b.date.getTime());
+    private get activitiesArrayFromMap() {
+        return Array.from(this.activityRegistry.values());
     }
 
     get groupedActivities() {
         return Object.entries(
-            this.activitiesByDate.reduce((activities, activity) => {
-                const date = format(activity.date, 'dd MMM yyyy h:mm aa');
+            this.activitiesArrayFromMap.reduce((activities, activity) => {
+                const date = format(activity.date, 'dd MMM yyyy h:mm aa').slice(0, 11);
                 activities[date] = activities[date] ? [...activities[date], activity] : [activity];
                 return activities;
             }, {} as { [key: string]: Activity[] })
