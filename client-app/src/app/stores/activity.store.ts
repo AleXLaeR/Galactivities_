@@ -1,4 +1,4 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import {makeAutoObservable, reaction, runInAction} from "mobx";
 
 import {Activity, ActivityFormValues} from "../../models/Activity.model";
 import agent from "../api/agent";
@@ -6,8 +6,8 @@ import agent from "../api/agent";
 import { format } from "date-fns";
 
 import { store } from "./root.store";
-import {UserProfile} from "../../models/UserProfile.model";
-import {Pagination, PagingParams} from "../../models/pagination";
+import { UserProfile } from "../../models/UserProfile.model";
+import { Pagination, PagingParams } from "../../models/pagination";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
@@ -20,20 +20,68 @@ export default class ActivityStore {
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
 
+    filter = new Map().set('all', true);
+    sorting = 'date';
+
     private currentLength: number = 0;
 
     public constructor() {
         makeAutoObservable(this);
+
+        reaction(() => this.filter.keys(),
+            () => {
+                this.pagingParams = new PagingParams();
+                this.activityRegistry.clear();
+                this.fetchActivities().then();
+            })
+        ;
+        reaction(() => this.sorting,
+            () => {
+                this.pagingParams = new PagingParams();
+                this.activityRegistry.clear();
+                this.fetchActivities().then();
+            })
+        ;
     }
 
     public setPagingParams = (pagingParams: PagingParams) => {
         this.pagingParams = pagingParams;
     }
 
+    public setFilter = (filter: string, value?: any) => {
+        const resetFilter = () => {
+            this.filter.forEach((_, key) => {
+                this.filter.delete(key);
+            });
+        }
+
+        switch (filter) {
+            case 'all':
+                resetFilter();
+                this.filter.set('all', value);
+                break;
+            case 'isGoing':
+                resetFilter();
+                this.filter.set('isGoing', value);
+                break;
+            case 'isHosting':
+                resetFilter();
+                this.filter.set('isHosting', value);
+                break;
+        }
+    }
+
+    public setSorting = (sortBy: string) => {
+        this.sorting = sortBy;
+    }
+
     private get axiosParams() {
         const params = new URLSearchParams();
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
         params.append('pageSize', this.pagingParams.pageSize.toString());
+
+        this.filter.forEach((val, key) => params.append(key, val));
+        params.append('Filter', this.sorting);
 
         return params;
     }
@@ -45,7 +93,6 @@ export default class ActivityStore {
         }
         try {
             const result = await agent.Activities.list(this.axiosParams);
-            console.log(result)
             result.data.forEach(this.addActivity);
 
             runInAction(() =>  {
@@ -103,15 +150,14 @@ export default class ActivityStore {
         this.activityRegistry.set(activity.id, activity);
     }
 
-    get activitiesByDate() {
-        return Array.from(this.activityRegistry.values()).sort((a, b) =>
-            a.date.getTime() - b.date.getTime());
+    private get activitiesArrayFromMap() {
+        return Array.from(this.activityRegistry.values());
     }
 
     get groupedActivities() {
         return Object.entries(
-            this.activitiesByDate.reduce((activities, activity) => {
-                const date = format(activity.date, 'dd MMM yyyy h:mm aa');
+            this.activitiesArrayFromMap.reduce((activities, activity) => {
+                const date = format(activity.date, 'dd MMM yyyy h:mm aa').slice(0, 11);
                 activities[date] = activities[date] ? [...activities[date], activity] : [activity];
                 return activities;
             }, {} as { [key: string]: Activity[] })

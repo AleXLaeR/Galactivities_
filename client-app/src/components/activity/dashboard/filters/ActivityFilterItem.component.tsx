@@ -1,14 +1,9 @@
 import {Header, Menu} from "semantic-ui-react";
 
 import './ActivityFilters.styles.scss';
-import {useState} from "react";
-import {useMobXStore} from "../../../../app/stores/root.store";
 
-interface Props {
-    header: string;
-    iconName?: string;
-    filterTitles: string[];
-}
+import {useMobXStore} from "../../../../app/stores/root.store";
+import {observer} from "mobx-react-lite";
 
 const FilterHeaderStyles = {
     borderRadius: '6px',
@@ -16,11 +11,18 @@ const FilterHeaderStyles = {
     borderBottomRightRadius: '0',
 }
 
-const ActivityFilterItem = ({ filterTitles, header, iconName }: Props) => {
-    const [activeTab, setActiveTab] = useState(0);
+const sortingMap: Map<string, string> = new Map()
+    .set('All', 'all')
+    .set('I\'m going', 'isGoing')
+    .set('I\'m hosting', 'isHosting');
 
+const ActivityFilterItem = () => {
     const { activityStore } = useMobXStore();
-    const { activitiesByDate } = activityStore;
+    const { filter, setFilter } = activityStore;
+
+    const handleFilterSelect = (tabIdx: number, key: string) => {
+        setFilter(key, 'true');
+    }
 
     return (
         <Menu vertical size="large" fluid style={{marginTop: "2rem"}}>
@@ -28,21 +30,22 @@ const ActivityFilterItem = ({ filterTitles, header, iconName }: Props) => {
                 dividing
                 attached
                 color="teal"
-                icon={iconName}
-                content={header}
+                icon='filter'
+                content='Filter By'
                 style={FilterHeaderStyles}
             />
-            {filterTitles.map((title, idx) => (
+            {Array.from(sortingMap.keys()).map((key, idx) => (
                 <Menu.Item
-                    key={title}
-                    content={title}
+                    key={key}
+                    content={key}
+                    active={filter.has(sortingMap.get(key))}
                     className="filter-title"
-                    icon={(activeTab === idx) ? "checkmark" : null}
-                    onClick={() => {}}
+                    icon={filter.has(sortingMap.get(key)) ? "checkmark" : null}
+                    onClick={() => handleFilterSelect(idx, sortingMap.get(key)!)}
                 />
             ))}
         </Menu>
     );
 }
 
-export default ActivityFilterItem;
+export default observer(ActivityFilterItem);
