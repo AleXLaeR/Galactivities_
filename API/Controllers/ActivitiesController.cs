@@ -1,16 +1,22 @@
 ﻿using Application.Activities;
 using Application.Attendance;
 using Domain.Entities;
+using Domain.Entities.Params;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+
 namespace API.Controllers;
 
 public class ActivitiesController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetActivities()
+    public async Task<IActionResult> GetActivities([FromQuery] SortingPagedParams? sortingParams)
     {
-        return HandleResult(await Mediator.Send(new List.Query()));
+        return HandlePagedResult(await Mediator.Send(new List.Query
+        {
+            SortingPagedParams = sortingParams ?? new SortingPagedParams()
+        }));
     }
     
     [HttpGet("{id:guid}")]
@@ -43,6 +49,6 @@ public class ActivitiesController : BaseApiController
     [HttpPost("{id:guid}/attend")]
     public async Task<IActionResult> Attend([FromRoute] Guid id)
     {
-        return HandleResult(await Mediator.Send(new UpdateAttendance.Command() { Id = id }));
+        return HandleResult(await Mediator.Send(new UpdateAttendance.Command { Id = id }));
     }
 }
