@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Activity } from "../../../models/Activity.model";
 
 import { Segment, List, Label, Item, Image } from 'semantic-ui-react';
+import {ROUTES} from "../../../utils/contants.utils";
 
 interface Props {
     activity: Activity;
@@ -34,10 +35,14 @@ const ActivityDetailedSideBar = ({ activity: { attendees, host } }: Props) => (
                                 Host
                             </Label>
                         )}
-                        <Image size='tiny' src={attendee.imageUri || '/assets/user.png'} />
+                        <Image
+                            size='tiny'
+                            src={attendee.imageUri || '/assets/user.png'}
+                            style={{borderRadius: '8px', border: '6px outset rgba(255, 255, 255, .9)'}}
+                        />
                         <Item.Content verticalAlign='middle'>
                             <Item.Header as='h3'>
-                                <Link to={`profiles/${attendee.username}`}>
+                                <Link to={`${ROUTES.PROFILE.BASE}/${attendee.username}`}>
                                     {attendee.displayName}
                                 </Link>
                             </Item.Header>

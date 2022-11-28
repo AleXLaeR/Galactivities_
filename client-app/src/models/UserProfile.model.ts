@@ -16,3 +16,10 @@ export class UserProfile implements UserProfile {
         this.imageUri = user.imageUri;
     }
 }
+
+export interface UserActivity {
+    id: string;
+    title: string;
+    category: string;
+    date: Date;
+}
