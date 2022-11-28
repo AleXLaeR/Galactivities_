@@ -28,13 +28,29 @@ const ProfileAbout = () => {
                         />
                     )}
                 </Grid.Column>
+
                 <Grid.Column width='16'>
-                    {isEditMode ? <ProfileEditForm setEditMode={setIsEditMode}/> :
-                        <span style={{whiteSpace: 'pre-wrap'}}>
-                            {profile?.biography}
-                        </span>
-                    }
+                    {(profile?.biography === null) ? (
+                        <Header
+                            as='h3'
+                            content='Nothing to show here'
+                            textAlign='center'
+                            style={{marginTop: '1rem'}}
+                        />
+                    ) : (
+                        <>
+                            {isEditMode ? (
+                                <ProfileEditForm setEditMode={setIsEditMode}/>
+                            ) : (
+                                <span style={{whiteSpace: 'pre-wrap'}}>
+                                    {profile?.biography}
+                                </span>
+                            )}
+                        </>
+                    )}
                 </Grid.Column>
+
+
             </Grid>
         </Tab.Pane>
     );

@@ -10,7 +10,7 @@ import { store } from "../stores/root.store";
 import { ROUTES } from "../../utils/contants.utils";
 
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import {UserProfile} from "../../models/UserProfile.model";
+import {UserActivity, UserProfile} from "../../models/UserProfile.model";
 import {ProfileImage} from "../../models/Image.model";
 
 
@@ -117,6 +117,9 @@ const Profiles = {
     },
     setMain: (id: string) => requests.post(`${ROUTES.IMAGES.BASE}/${id}/setMain`, {}),
     deleteImage: (id: string) => requests.delete(`${ROUTES.IMAGES.BASE}/${id}`),
+    listActivities: (username: string, filter?: string) => requests.get<UserActivity[]>(
+        `${ROUTES.PROFILE.BASE}/${username}${ROUTES.ACTIVITIES.LIST}?filter=${filter}`
+    ),
 }
 
 const agent = {
