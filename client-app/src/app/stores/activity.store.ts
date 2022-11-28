@@ -50,9 +50,9 @@ export default class ActivityStore {
 
     public setFilter = (filter: string, value?: any) => {
         const resetFilter = () => {
-            this.filter.forEach((_, key) => {
-                this.filter.delete(key);
-            });
+            this.filter.forEach((value, key) => {
+                if (key !== 'startDate') this.filter.delete(key);
+            })
         }
 
         switch (filter) {
@@ -68,6 +68,10 @@ export default class ActivityStore {
                 resetFilter();
                 this.filter.set('isHosting', value);
                 break;
+            case 'startDate':
+                this.filter.delete('startDate');
+                this.filter.set('startDate', value);
+                break;
         }
     }
 
@@ -77,10 +81,14 @@ export default class ActivityStore {
 
     private get axiosParams() {
         const params = new URLSearchParams();
+
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
         params.append('pageSize', this.pagingParams.pageSize.toString());
 
-        this.filter.forEach((val, key) => params.append(key, val));
+        this.filter.forEach((value, key) =>
+            params.append(key, (key === 'startDate') ?
+                (value as Date).toISOString() : value)
+        );
         params.append('Filter', this.sorting);
 
         return params;

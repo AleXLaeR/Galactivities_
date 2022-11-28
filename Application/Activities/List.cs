@@ -34,6 +34,7 @@ public class List
         public async Task<Result<PagedList<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken)
         {
             var asQueryable = _context.Activities
+                .Where(a => a.Date >= request.Params.StartDate)
                 .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
                 .AsQueryable();
 
