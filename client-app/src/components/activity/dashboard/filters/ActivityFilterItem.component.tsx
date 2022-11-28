@@ -14,15 +14,11 @@ const FilterHeaderStyles = {
 const sortingMap: Map<string, string> = new Map()
     .set('All', 'all')
     .set('I\'m going', 'isGoing')
-    .set('I\'m hosting', 'isHosting');
+    .set('I\'m hosting', 'isHost');
 
 const ActivityFilterItem = () => {
     const { activityStore } = useMobXStore();
     const { filter, setFilter } = activityStore;
-
-    const handleFilterSelect = (tabIdx: number, key: string) => {
-        setFilter(key, 'true');
-    }
 
     return (
         <Menu vertical size="large" fluid style={{marginTop: "2rem"}}>
@@ -34,14 +30,14 @@ const ActivityFilterItem = () => {
                 content='Filter By'
                 style={FilterHeaderStyles}
             />
-            {Array.from(sortingMap.keys()).map((key, idx) => (
+            {Array.from(sortingMap.keys()).map(key => (
                 <Menu.Item
                     key={key}
                     content={key}
                     active={filter.has(sortingMap.get(key))}
                     className="filter-title"
                     icon={filter.has(sortingMap.get(key)) ? "checkmark" : null}
-                    onClick={() => handleFilterSelect(idx, sortingMap.get(key)!)}
+                    onClick={() => setFilter(sortingMap.get(key)!, true)}
                 />
             ))}
         </Menu>

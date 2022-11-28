@@ -55,6 +55,8 @@ export default class ActivityStore {
             })
         }
 
+        console.log(filter)
+
         switch (filter) {
             case 'all':
                 resetFilter();
@@ -64,9 +66,9 @@ export default class ActivityStore {
                 resetFilter();
                 this.filter.set('isGoing', value);
                 break;
-            case 'isHosting':
+            case 'isHost':
                 resetFilter();
-                this.filter.set('isHosting', value);
+                this.filter.set('isHost', value);
                 break;
             case 'startDate':
                 this.filter.delete('startDate');
