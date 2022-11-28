@@ -1,12 +1,14 @@
-import { useEffect } from "react";
+import {useEffect, useState} from "react";
 
 import { observer } from "mobx-react-lite";
 import  { useMobXStore } from "../../../app/stores/root.store";
 
 import ActivityFilters from "./filters/ActivityFilters.component";
-import { Container, Grid } from 'semantic-ui-react';
+import {Container, Grid, Loader} from 'semantic-ui-react';
 import ActivityList from './ActivityList.component';
 import Spinner from "../../helpers/Spinner.component.";
+import InfiniteScroll from "react-infinite-scroller";
+import {PagingParams} from "../../../models/pagination";
 
 const FilterStyles = {
     top: '5rem',
@@ -15,23 +17,46 @@ const FilterStyles = {
 }
 
 const ActivityDashboard = () => {
+    const [loadingNext, setLoadingNext] = useState(false);
+
     const { activityStore } = useMobXStore();
+    const { fetchActivities, isLoadingInitial, pagination, setPagingParams } = activityStore;
 
     useEffect(() => {
         activityStore.fetchActivities().then(() => {});
     }, [activityStore]);
 
-    if (activityStore.isLoadingInitial)
+    const handleGetNext = async () => {
+        setLoadingNext(true);
+
+        setPagingParams(new PagingParams(pagination!.currentPage + 1));
+        await fetchActivities(false);
+
+        setLoadingNext(false);
+    }
+
+    if (isLoadingInitial)
         return <Spinner content='Loading activities...' />
 
     return (
         <Container style={{marginTop: '6rem'}}>
             <Grid>
                 <Grid.Column width='10'>
-                    <ActivityList/>
+                    <InfiniteScroll
+                        pageStart={0}
+                        loadMore={handleGetNext}
+                        hasMore={!isLoadingInitial && !!pagination
+                            && pagination.currentPage < pagination.totalPages}
+                        initialLoad={false}
+                    >
+                        <ActivityList />
+                    </InfiniteScroll>
                 </Grid.Column>
                 <Grid.Column width='6' style={FilterStyles}>
-                    <ActivityFilters/>
+                    <ActivityFilters />
+                </Grid.Column>
+                <Grid.Column width={10}>
+                    <Loader active={loadingNext} />
                 </Grid.Column>
             </Grid>
         </Container>

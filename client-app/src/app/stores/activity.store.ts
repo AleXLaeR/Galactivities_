@@ -38,10 +38,10 @@ export default class ActivityStore {
         return params;
     }
 
-    public fetchActivities = async () => {
+    public fetchActivities = async (isLoading = true) => {
         if (this.currentLength === 0 ||
             this.activityRegistry.size !== this.currentLength) {
-            this.setLoadingInitial(true);
+            this.setLoadingInitial(isLoading);
         }
         try {
             const result = await agent.Activities.list(this.axiosParams);
