@@ -11,11 +11,11 @@ namespace API.Controllers;
 public class ActivitiesController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetActivities([FromQuery] SortingPagedParams? sortingParams)
+    public async Task<IActionResult> GetActivities([FromQuery] FilteringSortedParams? sortingParams)
     {
         return HandlePagedResult(await Mediator.Send(new List.Query
         {
-            SortingPagedParams = sortingParams ?? new SortingPagedParams()
+            Params = sortingParams ?? new FilteringSortedParams()
         }));
     }
     
