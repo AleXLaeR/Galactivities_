@@ -12,6 +12,7 @@ import { ROUTES } from "../../utils/contants.utils";
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import {UserActivity, UserProfile} from "../../models/UserProfile.model";
 import {ProfileImage} from "../../models/Image.model";
+import {PaginatedResult} from "../../models/pagination";
 
 
 const sleep = (delay: number) => {
@@ -33,6 +34,18 @@ axios.interceptors.request.use(config => {
 
 axios.interceptors.response.use(async response => {
     await sleep(1000);
+
+    const pagination = response.headers['pagination'];
+
+    if (pagination) {
+        response.data = new PaginatedResult(
+            response.data,
+            JSON.parse(pagination)
+        );
+
+        return response as AxiosResponse<PaginatedResult<any>>;
+    }
+
     return response;
 }, (error: AxiosError) => {
     let { data, status, config } = error.response!;
@@ -82,7 +95,7 @@ axios.interceptors.response.use(async response => {
 const responseBody = <T> (response: AxiosResponse<T>) => response.data;
 
 const requests = {
-    get: <T> (url: string) => axios.get<T>(url).then(responseBody),
+    get: <T> (url: string, params?: URLSearchParams) => axios.get<T>(url, {params}).then(responseBody),
     post: <T> (url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
     postWithHeaders: <T> (url: string, body: {}, headers: {}) =>
         axios.post<T>(url, body, headers).then(responseBody),
@@ -91,7 +104,7 @@ const requests = {
 }
 
 const Activities = {
-    list: () => requests.get<Activity[]>(ROUTES.ACTIVITIES.LIST),
+    list: (params: URLSearchParams) => requests.get<PaginatedResult<Activity[]>>(ROUTES.ACTIVITIES.LIST, params),
     details: (id: string) => requests.get<Activity>(`${ROUTES.ACTIVITIES.LIST}/${id}`),
     create: (activity: ActivityFormValues) => requests.post(ROUTES.ACTIVITIES.LIST, activity),
     update: (activity: ActivityFormValues) => requests.put(`${ROUTES.ACTIVITIES.LIST}/${activity.id}`, activity),

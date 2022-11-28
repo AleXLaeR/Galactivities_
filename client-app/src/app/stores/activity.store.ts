@@ -7,18 +7,35 @@ import { format } from "date-fns";
 
 import { store } from "./root.store";
 import {UserProfile} from "../../models/UserProfile.model";
+import {Pagination, PagingParams} from "../../models/pagination";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
     selectedActivity: Activity | undefined = undefined;
-    isEditMode: boolean = false;
-    isSubmitMode: boolean = false;
-    isLoadingInitial: boolean = false;
+
+    isEditMode = false;
+    isSubmitMode = false;
+    isLoadingInitial = false;
+
+    pagination: Pagination | null = null;
+    pagingParams = new PagingParams();
 
     private currentLength: number = 0;
 
     public constructor() {
         makeAutoObservable(this);
+    }
+
+    public setPagingParams = (pagingParams: PagingParams) => {
+        this.pagingParams = pagingParams;
+    }
+
+    private get axiosParams() {
+        const params = new URLSearchParams();
+        params.append('pageNumber', this.pagingParams.pageNumber.toString());
+        params.append('pageSize', this.pagingParams.pageSize.toString());
+
+        return params;
     }
 
     public fetchActivities = async () => {
@@ -27,16 +44,23 @@ export default class ActivityStore {
             this.setLoadingInitial(true);
         }
         try {
-            const activities = await agent.Activities.list();
-            runInAction(() => {
-                activities.forEach(this.addActivity);
-                this.currentLength = activities.length;
+            const result = await agent.Activities.list(this.axiosParams);
+            console.log(result)
+            result.data.forEach(this.addActivity);
+
+            runInAction(() =>  {
+                this.setPagination(result.pagination);
+                this.currentLength = result.data.length;
             });
         }
         catch (error: any) {
             console.log(error);
         }
         this.setLoadingInitial(false);
+    }
+
+    public setPagination = (pagination: Pagination) => {
+        this.pagination = pagination;
     }
 
     public fetchActivity = async (id: string) => {
