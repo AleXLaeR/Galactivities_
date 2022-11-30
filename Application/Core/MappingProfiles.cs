@@ -37,6 +37,18 @@ public class MappingProfiles : Profile
             .ForMember(d => d.ImageUri, 
                 o => o.MapFrom(s =>
                     s.User.Images.FirstOrDefault(i => i.IsMain)!.Uri)
+            )
+            .ForMember(d => d.FollowersCount, 
+                o => o.MapFrom(s =>
+                    s.User.Followers.Count)
+            )
+            .ForMember(d => d.FollowingCount, 
+                o => o.MapFrom(s =>
+                    s.User.Followings.Count)
+            )
+            .ForMember(d => d.IsFollowing, 
+                o => o.MapFrom(s =>
+                    s.User.Followers.Any(f => f.Observer.UserName == currentUsername))
             );
 
         CreateMap<User, UserProfile>()
