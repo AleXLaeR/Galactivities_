@@ -19,7 +19,7 @@ interface Props {
 const ActivityItem = ({ activity }: Props) => {
     const [target, setTarget] = useState('');
 
-    const { activityStore } = useMobXStore();
+    const { activityStore, userStore: { user } } = useMobXStore();
     const { isSubmitMode, deleteActivity } = activityStore;
 
     const handleActivityDelete = async (e: SyntheticEvent<HTMLButtonElement>, id: string) => {
@@ -102,14 +102,15 @@ const ActivityItem = ({ activity }: Props) => {
                     floated='right'
                     content='View'
                 />
-                <Button
-                    name={activity.id}
-                    loading={isSubmitMode && target === activity.id}
-                    onClick={(e) => handleActivityDelete(e, activity.id)}
-                    color='red'
-                    floated='right'
-                    content='Delete'
-                />
+                    <Button
+                        name={activity.id}
+                        loading={isSubmitMode && target === activity.id}
+                        onClick={(e) => handleActivityDelete(e, activity.id)}
+                        color='red'
+                        floated='right'
+                        content='Delete'
+                        disabled={activity.hostUsername !== user?.username}
+                    />
             </Segment>
         </Segment.Group>
     );
