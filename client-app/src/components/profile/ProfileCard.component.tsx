@@ -11,6 +11,12 @@ interface Props {
     profile: UserProfile;
 }
 
+const truncate = (str?: string, upTo: number = 50) => {
+    if (str) {
+        return (str.length > upTo) ? str.substring(0, upTo - 3) + '...' : str;
+    }
+}
+
 const ProfileCard = ({ profile }: Props) => (
     <Card>
         <Image src={profile.imageUri || 'assets/user.png'}/>
@@ -21,21 +27,23 @@ const ProfileCard = ({ profile }: Props) => (
                     Profile
                 </Button>
                 <Button.Or />
-                <Button>
+                <Button color={profile.isFollowing ? 'google plus' : 'instagram'}>
                     <Icon name='pencil' />
-                   Follow
+                    {profile.isFollowing ? 'Unfollow' : 'Follow'}
                 </Button>
             </ButtonGroup>
         </Card.Content>
         <Card.Content>
             <Card.Header>{profile.displayName}</Card.Header>
             <Card.Description>
-                {profile.biography?.substring(0, 30)}
+                {truncate(profile.biography)}
             </Card.Description>
             <Divider />
             <Card.Content extra>
-                <Icon name='pencil' />
-                10 followers
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <span><Icon name='pencil' /> {profile.followersCount} followers</span>
+                    <span><Icon name='address book' /> {profile.followingCount} followings</span>
+                </div>
             </Card.Content>
         </Card.Content>
     </Card>

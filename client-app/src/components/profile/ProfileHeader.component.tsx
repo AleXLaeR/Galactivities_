@@ -22,8 +22,8 @@ const ProfileHeader = ({ profile }: Props) => {
                 </Grid.Column>
                 <Grid.Column width={4}>
                     <Statistic.Group widths={2}>
-                        <Statistic label='followers' value='5'/>
-                        <Statistic label='following' value='10'/>
+                        <Statistic label='followers' value={profile.followersCount}/>
+                        <Statistic label='following' value={profile.followingCount} />
                     </Statistic.Group>
                     <Divider/>
                     <Reveal animated='move'>
@@ -34,8 +34,8 @@ const ProfileHeader = ({ profile }: Props) => {
                             <Button
                                 fluid
                                 basic
-                                color={true ? 'red' : 'green'}
-                                content={true ? 'Unfollow' : 'Follow'}
+                                color={profile.isFollowing ? 'red' : 'green'}
+                                content={profile.isFollowing ? 'Unfollow' : 'Follow'}
                             />
                         </Reveal.Content>
                     </Reveal>

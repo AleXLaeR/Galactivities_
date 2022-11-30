@@ -8,6 +8,11 @@ interface Props {
     attendees: UserProfile[]
 }
 
+const attendeeImageStyles = {
+    borderColor: 'orange',
+    borderWidth: 'medium'
+}
+
 const ActivityAttendees = ({ attendees }: Props) => (
     <List horizontal>
         {attendees.map(attendee => (
@@ -16,7 +21,13 @@ const ActivityAttendees = ({ attendees }: Props) => (
                 key={attendee.username}
                 trigger={
                 <List.Item key={attendee.username} as={Link} to={`profiles/${attendee.username}`}>
-                    <Image size='mini' circular src={attendee.imageUri || '/assets/user.png'}/>
+                    <Image
+                        size='mini'
+                        circular
+                        style={attendee.isFollowing ? attendeeImageStyles : null}
+                        bordered
+                        src={attendee.imageUri || '/assets/user.png'}
+                    />
                 </List.Item>
             }
             >
