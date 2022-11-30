@@ -41,6 +41,14 @@ public class MappingProfiles : Profile
             .ForMember(d => d.ImageUri, 
                 o => o.MapFrom(s =>
                 s.Images.FirstOrDefault(i => i.IsMain)!.Uri)
+            )
+            .ForMember(d => d.FollowersCount, 
+                o => o.MapFrom(s =>
+                    s.Followers.Count)
+            )
+            .ForMember(d => d.FollowingCount, 
+                o => o.MapFrom(s =>
+                    s.Followings.Count)
             );
 
         CreateMap<ActivityAttendee, UserActivityDto>()
