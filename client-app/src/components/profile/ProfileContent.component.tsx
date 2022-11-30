@@ -4,22 +4,22 @@ import { UserProfile } from "../../models/UserProfile.model";
 import { observer } from "mobx-react-lite";
 import ProfileAbout from "./ProfileAbout.component";
 import ProfileActivities from "./ProfileActivities.component";
+import ProfileFollowings from "./ProfileFollowings.component";
+import {useMobXStore} from "../../app/stores/root.store";
 
 interface Props {
     profile: UserProfile;
 }
 
-const borderRadStyle = {
-    borderRadius: '6px'
-}
-
 const ProfileContent = ({ profile }: Props) => {
+    const { profileStore: { setActiveTab } } = useMobXStore();
+
     const panes = [
         { menuItem: 'About', render: () => <ProfileAbout /> },
         { menuItem: 'Photos', render: () => <ProfileImages profile={profile} /> },
         { menuItem: 'Events', render: () => <ProfileActivities /> },
-        { menuItem: 'Followers', render: () => <Tab.Pane style={borderRadStyle}>Followers</Tab.Pane> },
-        { menuItem: 'Following', render: () => <Tab.Pane style={borderRadStyle}>Following</Tab.Pane> },
+        { menuItem: 'Followers', render: () => <ProfileFollowings /> },
+        { menuItem: 'Following', render: () => <ProfileFollowings /> },
     ];
 
     return (
@@ -27,6 +27,7 @@ const ProfileContent = ({ profile }: Props) => {
             menu={{fluid: true, vertical: true}}
             menuPosition='right'
             panes={panes}
+            onTabChange={(_, data) => setActiveTab(data.activeIndex as number)}
         />
     );
 };

@@ -10,6 +10,8 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
+        var currentUsername = String.Empty;
+        
         CreateMap<Activity, Activity>();
 
         CreateMap<Activity, ActivityDto>()
@@ -35,12 +37,36 @@ public class MappingProfiles : Profile
             .ForMember(d => d.ImageUri, 
                 o => o.MapFrom(s =>
                     s.User.Images.FirstOrDefault(i => i.IsMain)!.Uri)
+            )
+            .ForMember(d => d.FollowersCount, 
+                o => o.MapFrom(s =>
+                    s.User.Followers.Count)
+            )
+            .ForMember(d => d.FollowingCount, 
+                o => o.MapFrom(s =>
+                    s.User.Followings.Count)
+            )
+            .ForMember(d => d.IsFollowing, 
+                o => o.MapFrom(s =>
+                    s.User.Followers.Any(f => f.Observer.UserName == currentUsername))
             );
 
         CreateMap<User, UserProfile>()
             .ForMember(d => d.ImageUri, 
                 o => o.MapFrom(s =>
                 s.Images.FirstOrDefault(i => i.IsMain)!.Uri)
+            )
+            .ForMember(d => d.FollowersCount, 
+                o => o.MapFrom(s =>
+                    s.Followers.Count)
+            )
+            .ForMember(d => d.FollowingCount, 
+                o => o.MapFrom(s =>
+                    s.Followings.Count)
+            )
+            .ForMember(d => d.IsFollowing, 
+                o => o.MapFrom(s =>
+                    s.Followers.Any(f => f.Observer.UserName == currentUsername))
             );
 
         CreateMap<ActivityAttendee, UserActivityDto>()

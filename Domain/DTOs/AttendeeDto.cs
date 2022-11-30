@@ -13,4 +13,10 @@ public class AttendeeDto
     public string? Biography { get; set; }
     
     public string? ImageUri { get; set; }
+    
+    public bool IsFollowing { get; set; }
+
+    public int FollowersCount { get; set; }
+
+    public int FollowingCount { get; set; }
 }

@@ -15,4 +15,8 @@ public class User : IdentityUser
     public List<ActivityAttendee> Activities { get; set; } = new();
 
     public List<Image> Images { get; set; } = new();
+
+    public List<UserFollowing> Followings { get; set; } = new();
+    
+    public List<UserFollowing> Followers { get; set; } = new();
 }

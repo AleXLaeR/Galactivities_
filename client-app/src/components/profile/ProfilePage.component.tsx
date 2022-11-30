@@ -11,11 +11,12 @@ const ProfilePage = () => {
     const { username } = useParams<{username: string}>();
 
     const { profileStore } = useMobXStore();
-    const { profile, isLoading, fetchProfile } = profileStore;
+    const { profile, isLoading, fetchProfile, setActiveTab } = profileStore;
 
     useEffect(() => {
         fetchProfile(username!).then();
-    }, [fetchProfile, username]);
+        return () => setActiveTab(0);
+    }, [fetchProfile, setActiveTab, username]);
 
     if (isLoading)
         return <Spinner  content='Loading profile...' />

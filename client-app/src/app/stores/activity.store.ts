@@ -77,6 +77,17 @@ export default class ActivityStore {
         }
     }
 
+    public updateAttendeeFollowings = (username: string) => {
+        this.activityRegistry.forEach(activity => {
+            activity.attendees.forEach(attendee => {
+                if (attendee.username === username) {
+                    attendee.isFollowing ? attendee.followersCount-- : attendee.followersCount++;
+                    attendee.isFollowing = !attendee.isFollowing;
+                }
+            });
+        });
+    }
+
     public setSorting = (sortBy: string) => {
         this.sorting = sortBy;
     }

@@ -35,7 +35,8 @@ public class List
         {
             var asQueryable = _context.Activities
                 .Where(a => a.Date >= request.Params.StartDate)
-                .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider,
+                    new { currentUsername = _userAccessor.GetUsername() })
                 .AsQueryable();
 
             var sortedActivities = GetFilteredActivities(asQueryable, request.Params);
