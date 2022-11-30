@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221130075003_FollowingEntityAdded")]
+    [Migration("20221130081842_FollowingEntityAdded")]
     partial class FollowingEntityAdded
     {
         /// <inheritdoc />
@@ -358,7 +358,7 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Entities.User", "Target")
                         .WithMany("Followers")
                         .HasForeignKey("TargetId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Observer");
