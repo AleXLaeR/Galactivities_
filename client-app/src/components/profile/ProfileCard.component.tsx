@@ -6,6 +6,7 @@ import { ROUTES } from "../../utils/contants.utils";
 import { UserProfile } from "../../models/UserProfile.model";
 
 import {Button, ButtonGroup, Card, Divider, Icon, Image} from "semantic-ui-react";
+import FollowButton from "./FollowButton.component";
 
 interface Props {
     profile: UserProfile;
@@ -22,15 +23,11 @@ const ProfileCard = ({ profile }: Props) => (
         <Image src={profile.imageUri || 'assets/user.png'}/>
         <Card.Content style={{textAlign: 'center'}}>
             <ButtonGroup>
-                <Button as={Link} to={`${ROUTES.PROFILE.BASE}/${profile.username}`}>
+                <Button style={{marginRight: '1rem', borderRadius: '4px'}} as={Link} to={`${ROUTES.PROFILE.BASE}/${profile.username}`}>
                     <Icon name='user' />
                     Profile
                 </Button>
-                <Button.Or />
-                <Button color={profile.isFollowing ? 'google plus' : 'instagram'}>
-                    <Icon name='pencil' />
-                    {profile.isFollowing ? 'Unfollow' : 'Follow'}
-                </Button>
+                <FollowButton profile={profile} />
             </ButtonGroup>
         </Card.Content>
         <Card.Content>

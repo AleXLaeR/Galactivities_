@@ -87,7 +87,7 @@ const ActivityItem = ({ activity }: Props) => {
             <Segment>
                 <span style={{display: 'flex', justifyContent: 'space-between'}}>
                     <div><Icon name='clock'/> {format(activity.date, 'dd MMM yyyy h:mm aa')}</div>
-                    <div><Icon name='marker'/> {activity.venue}, {activity.location}</div>
+                    <div><Icon name='map marker alternate'/> {activity.venue}, {activity.location}</div>
                 </span>
             </Segment>
             <Segment secondary compact>

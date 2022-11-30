@@ -133,6 +133,7 @@ const Profiles = {
     listActivities: (username: string, filter?: string) => requests.get<UserActivity[]>(
         `${ROUTES.PROFILE.BASE}/${username}${ROUTES.ACTIVITIES.LIST}?filter=${filter}`
     ),
+    updateFollowing: (username: string) => requests.post(`/follow/${username}`, {})
 }
 
 const agent = {

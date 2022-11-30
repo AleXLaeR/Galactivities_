@@ -15,6 +15,7 @@ export default class ProfileStore {
     activeTab: number = 0;
     userActivities: UserActivity[] = [];
     loadingActivities = false;
+    followings: UserProfile[] = [];
 
     public constructor() {
         makeAutoObservable(this);
@@ -154,6 +155,35 @@ export default class ProfileStore {
         }
         finally {
             runInAction(() => this.loadingActivities = false);
+        }
+    }
+
+    public updateFollowing = async (username: string, isFollowingAfter: boolean) => {
+        this.isLoading = true;
+
+        try {
+            await agent.Profiles.updateFollowing(username);
+            store.activityStore.updateAttendeeFollowings(username);
+
+            runInAction(() => {
+               if (this.profile &&
+                   this.profile.username !== store.userStore.user?.username) {
+                   isFollowingAfter ? this.profile.followersCount++ : this.profile.followersCount--;
+                   this.profile.isFollowing = !this.profile.isFollowing;
+               }
+
+               this.followings.forEach(profile => {
+                   if (profile.username === username) {
+                       profile.isFollowing ? profile.followersCount-- : profile.followersCount++;
+                       profile.isFollowing = !profile.isFollowing;
+                   }
+               });
+            });
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            runInAction(() => this.isLoading = false);
         }
     }
 }
