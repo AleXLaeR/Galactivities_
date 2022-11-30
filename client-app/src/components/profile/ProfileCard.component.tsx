@@ -5,11 +5,12 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "../../utils/contants.utils";
 import { UserProfile } from "../../models/UserProfile.model";
 
-import {Button, ButtonGroup, Card, Divider, Icon, Image} from "semantic-ui-react";
+import {Button, ButtonGroup, Card, Divider, Icon, Image, SemanticSIZES} from "semantic-ui-react";
 import FollowButton from "./FollowButton.component";
 
 interface Props {
     profile: UserProfile;
+    size?: SemanticSIZES;
 }
 
 const truncate = (str?: string, upTo: number = 50) => {
@@ -18,11 +19,11 @@ const truncate = (str?: string, upTo: number = 50) => {
     }
 }
 
-const ProfileCard = ({ profile }: Props) => (
+const ProfileCard = ({ profile, size = 'medium' }: Props) => (
     <Card>
-        <Image src={profile.imageUri || 'assets/user.png'}/>
+        <Image src={profile.imageUri || '/assets/user.png'}/>
         <Card.Content style={{textAlign: 'center'}}>
-            <ButtonGroup>
+            <ButtonGroup size={size}>
                 <Button style={{marginRight: '1rem', borderRadius: '4px'}} as={Link} to={`${ROUTES.PROFILE.BASE}/${profile.username}`}>
                     <Icon name='user' />
                     Profile
@@ -33,7 +34,7 @@ const ProfileCard = ({ profile }: Props) => (
         <Card.Content>
             <Card.Header>{profile.displayName}</Card.Header>
             <Card.Description>
-                {truncate(profile.biography)}
+                {profile.biography ? truncate(profile.biography) : <em>No biography</em>}
             </Card.Description>
             <Divider />
             <Card.Content extra>

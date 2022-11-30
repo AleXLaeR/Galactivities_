@@ -7,12 +7,11 @@ import {SyntheticEvent} from "react";
 
 interface Props {
     profile: UserProfile;
-    inBtnGroup?: boolean;
 }
 
-const FollowButton = ({ profile, inBtnGroup = false }: Props) => {
+const FollowButton = ({ profile }: Props) => {
     const { profileStore, userStore: { user } } = useMobXStore();
-    const { updateFollowing, isLoading } = profileStore;
+    const { updateFollowing, isUploading } = profileStore;
 
     const handleFollow = async (e: SyntheticEvent<HTMLButtonElement>, username: string) => {
         e.preventDefault();
@@ -20,12 +19,6 @@ const FollowButton = ({ profile, inBtnGroup = false }: Props) => {
     }
 
     return (
-        inBtnGroup ? (
-            <Button
-                color={profile.isFollowing ? 'red' : 'green'}
-                content={profile.isFollowing ? 'Unfollow' : 'Follow'}
-            />
-            ) : (
             <Reveal animated='move'>
                 <Reveal.Content disabled={user?.username === profile.username} visible style={{width: '100%'}}>
                     <Button
@@ -41,12 +34,12 @@ const FollowButton = ({ profile, inBtnGroup = false }: Props) => {
                         color={profile.isFollowing ? 'red' : 'green'}
                         content={profile.isFollowing ? 'Unfollow' : 'Follow'}
                         disabled={user?.username === profile.username}
-                        loading={isLoading}
+                        loading={isUploading}
                         onClick={e => handleFollow(e, profile.username)}
                     />
                 </Reveal.Content>
             </Reveal>
-    ));
+    );
 }
 
 export default observer(FollowButton);
