@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Users;
 
 namespace Infrastructure.Interfaces.Services;
 

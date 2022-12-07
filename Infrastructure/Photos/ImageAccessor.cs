@@ -1,10 +1,10 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Domain.Exceptions;
-using Infrastructure.Common;
+using Infrastructure.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
-using ImageUploadResult = Domain.Entities.Images.ImageUploadResult;
+using ImageUploadResult = Domain.Entities.Photos.ImageUploadResult;
 
 namespace Infrastructure.Photos;
 

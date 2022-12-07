@@ -1,5 +1,6 @@
 ﻿using Application.Profiles;
 using Domain.Enums;
+using Domain.Enums.Filtering;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;

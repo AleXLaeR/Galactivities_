@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import App from "./components/app/App.component";
+import App from "./app/layout/app-component/App.component";
 
 import { store, StoreContext } from "./app/stores/root.store";
 

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
 using Domain.DTOs;
 using Domain.Entities;
+using Domain.Entities.Activities;
 using Domain.Entities.Junctions;
-using Domain.Entities.Profiles;
+using Domain.Entities.Users;
 
 namespace Application.Core;
 

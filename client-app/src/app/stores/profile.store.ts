@@ -1,11 +1,8 @@
-import {makeAutoObservable, reaction, runInAction} from "mobx";
+import { makeAutoObservable, reaction, runInAction } from "mobx";
 
-import {UserActivity, UserProfile} from "../../models/UserProfile.model";
-
-import Agent from "../api/agent";
-import {store} from "./root.store";
+import { store } from "./root.store";
 import agent from "../api/agent";
-import {ProfileImage} from "../../models/Image.model";
+import { UserProfile, UserActivity, ProfileImage } from "models/users/UserProfile";
 
 export default class ProfileStore {
     profile: UserProfile | null = null;
@@ -39,7 +36,7 @@ export default class ProfileStore {
         this.isLoading = true;
 
         try {
-            const profile = await Agent.Profiles.get(username);
+            const profile = await agent.Profiles.get(username);
             runInAction(() => this.profile = profile);
         }
         catch (error) {
@@ -50,7 +47,7 @@ export default class ProfileStore {
         }
     }
 
-    public get isCurrentStoredUser() {
+    public get isActiveUserStored() {
         if (store.userStore.user && this.profile) {
             return store.userStore.user.username === this.profile.username;
         }
@@ -129,7 +126,7 @@ export default class ProfileStore {
     }
 
     public updateProfile = async (profile: Partial<UserProfile>) => {
-        this.isLoading = true;
+        this.isUploading = true;
 
         try {
             await agent.Profiles.update(profile);
@@ -150,7 +147,7 @@ export default class ProfileStore {
             console.log(error);
         }
         finally {
-            runInAction(() => this.isLoading = false);
+            runInAction(() => this.isUploading = false);
         }
     }
 

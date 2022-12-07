@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Domain.Entities.Users;
 
 namespace Domain.Entities.Junctions;
 

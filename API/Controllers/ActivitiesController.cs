@@ -1,21 +1,20 @@
 ﻿using Application.Activities;
 using Application.Attendance;
 using Domain.Entities;
-using Domain.Entities.Params;
+using Domain.Entities.Activities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace API.Controllers;
 
 public class ActivitiesController : BaseApiController
 {
     [HttpGet]
-    public async Task<IActionResult> GetActivities([FromQuery] FilteringSortedParams? sortingParams)
+    public async Task<IActionResult> GetActivities([FromQuery] FilterParams? sortingParams)
     {
         return HandlePagedResult(await Mediator.Send(new List.Query
         {
-            Params = sortingParams ?? new FilteringSortedParams()
+            Params = sortingParams ?? new FilterParams()
         }));
     }
     

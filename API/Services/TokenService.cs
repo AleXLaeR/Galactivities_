@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using Domain.Entities;
+using Domain.Entities.Users;
 using Domain.Enums;
 using Infrastructure.Interfaces.Services;
 using Microsoft.IdentityModel.Tokens;

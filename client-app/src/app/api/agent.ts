@@ -1,23 +1,21 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-import {Activity, ActivityFormValues} from '../../models/Activity.model';
-import { User, UserFormValues } from "../../models/User.model";
-
-import { toast } from "react-toastify";
-import { history } from "../../index";
+import { Activity, ActivityFormValues } from '../../models/activities/Activity';
+import { User, UserFormValues } from "models/users/User";
+import { UserProfile, UserActivity, ProfileImage } from "models/users/UserProfile";
+import { PaginatedResult } from "../../models/Pagination";
 
 import { store } from "../stores/root.store";
-import { ROUTES } from "../../utils/contants.utils";
+import { history } from "../../index";
+import { ROUTES } from "../common/contants";
 
+import { toast } from "react-toastify";
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import {UserActivity, UserProfile} from "../../models/UserProfile.model";
-import {ProfileImage} from "../../models/Image.model";
-import {PaginatedResult} from "../../models/pagination";
 
 
 const sleep = (delay: number) => {
-    return new Promise((resolve) => {
-        setTimeout(resolve, delay)
+    return new Promise(resolve => {
+        setTimeout(resolve, delay);
     })
 }
 
@@ -125,7 +123,7 @@ const Profiles = {
         let formData = new FormData();
         formData.append('File', file);
         return requests.postWithHeaders<ProfileImage>(ROUTES.IMAGES.BASE, formData, {
-            headers: { 'Content-Type': 'multipart/form-data' }
+            headers: { 'Content-Type': 'multipart/create-activity-form-data' }
         })
     },
     setMain: (id: string) => requests.post(`${ROUTES.IMAGES.BASE}/${id}/setMain`, {}),
@@ -134,10 +132,8 @@ const Profiles = {
         `${ROUTES.PROFILE.BASE}/${username}${ROUTES.ACTIVITIES.LIST}?filter=${filter}`
     ),
     updateFollowing: (username: string) => requests.post(`/follow/${username}`, {}),
-    listFollowings: (username: string, followType: string) => {
-        console.log(`/follow/${username}?followType=${followType}`)
-        return requests.get<UserProfile[]>(`/follow/${username}?followType=${followType}`)
-    }
+    listFollowings: (username: string, followType: string) =>
+        requests.get<UserProfile[]>(`/follow/${username}?followType=${followType}`),
 }
 
 const agent = {

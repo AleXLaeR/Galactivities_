@@ -1,6 +1,8 @@
 ﻿using Domain.Entities;
-using Domain.Entities.Images;
+using Domain.Entities.Activities;
 using Domain.Entities.Junctions;
+using Domain.Entities.Photos;
+using Domain.Entities.Users;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

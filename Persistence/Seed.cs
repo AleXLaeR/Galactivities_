@@ -1,5 +1,7 @@
 ﻿using Domain.Entities;
+using Domain.Entities.Activities;
 using Domain.Entities.Junctions;
+using Domain.Entities.Users;
 using Microsoft.AspNetCore.Identity;
 
 namespace Persistence;

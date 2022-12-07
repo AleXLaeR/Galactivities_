@@ -1,12 +1,12 @@
 import { makeAutoObservable, runInAction } from "mobx";
 
-import agent from "../api/agent";
-import { store } from "./root.store";
+import agent from "app/api/agent";
+import { store } from "app/stores/root.store";
 
-import { User, UserFormValues } from "../../models/User.model";
+import { User, UserFormValues } from "../../models/users/User";
 
-import { history } from "../../index";
-import { ROUTES } from "../../utils/contants.utils";
+import { history } from "index";
+import { ROUTES } from "app/common/contants";
 
 export default class UserStore {
     user: User | null = null;
@@ -42,6 +42,7 @@ export default class UserStore {
     public login = async (credentials: UserFormValues) => {
         try {
             const user = await agent.Account.login(credentials);
+            console.log(user)
             this.onLoginOrRegisterEvent(user);
         }
         catch (error) {

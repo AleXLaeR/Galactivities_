@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Activities;
+using Domain.Entities.Users;
 
 namespace Domain.Entities.Junctions;
 
