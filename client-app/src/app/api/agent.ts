@@ -1,17 +1,16 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-import { Activity, ActivityFormValues } from '../../models/activities/Activity';
+import { Activity, ActivityFormValues } from 'models/activities/Activity';
 import { User, UserFormValues } from "models/users/User";
 import { UserProfile, UserActivity, ProfileImage } from "models/users/UserProfile";
-import { PaginatedResult } from "../../models/Pagination";
+import { PaginatedResult } from "models/Pagination";
 
-import { store } from "../stores/root.store";
-import { history } from "../../index";
-import { ROUTES } from "../common/contants";
+import { store } from "app/stores/root.store";
+import { router } from "app/router/Routes";
+import { ROUTES } from "app/common/contants";
 
 import { toast } from "react-toastify";
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-
 
 const sleep = (delay: number) => {
     return new Promise(resolve => {
@@ -55,7 +54,7 @@ axios.interceptors.response.use(async response => {
                 return toast.error(data);
             }
             if (config.method === 'get' && newData.errors.hasOwnProperty('id')) {
-                history.push(ROUTES.ERROR.NOT_FOUND);
+                router.navigate(ROUTES.ERROR.NOT_FOUND);
             }
 
             const { errors } = newData;
@@ -70,14 +69,14 @@ axios.interceptors.response.use(async response => {
             }
             break;
         case StatusCodes.UNAUTHORIZED:
-            history.push(ROUTES.ERROR.UNAUTHORIZED);
+            router.navigate(ROUTES.ERROR.UNAUTHORIZED);
             break;
         case StatusCodes.FORBIDDEN:
             toast.error(ReasonPhrases.FORBIDDEN);
             setTimeout(() => store.activityStore.setSubmitMode(false), 500);
             break;
         case StatusCodes.NOT_FOUND:
-            history.push(ROUTES.ERROR.NOT_FOUND);
+            router.navigate(ROUTES.ERROR.NOT_FOUND);
             break;
         case StatusCodes.INTERNAL_SERVER_ERROR:
             toast.error(ReasonPhrases.INTERNAL_SERVER_ERROR);
@@ -94,9 +93,7 @@ const responseBody = <T> (response: AxiosResponse<T>) => response.data;
 
 const requests = {
     get: <T> (url: string, params?: URLSearchParams) => axios.get<T>(url, {params}).then(responseBody),
-    post: <T> (url: string, body: {}) => axios.post<T>(url, body).then(responseBody),
-    postWithHeaders: <T> (url: string, body: {}, headers: {}) =>
-        axios.post<T>(url, body, headers).then(responseBody),
+    post: <T> (url: string, body: {}, headers?: {}) => axios.post<T>(url, body, headers).then(responseBody),
     put: (url: string, body: {}) => axios.put(url, body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody),
 }
@@ -122,7 +119,7 @@ const Profiles = {
     uploadImage: (file: Blob) => {
         let formData = new FormData();
         formData.append('File', file);
-        return requests.postWithHeaders<ProfileImage>(ROUTES.IMAGES.BASE, formData, {
+        return requests.post<ProfileImage>(ROUTES.IMAGES.BASE, formData, {
             headers: { 'Content-Type': 'multipart/create-activity-form-data' }
         })
     },

@@ -1,22 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import App from "./app/layout/app-component/App.component";
-
 import { store, StoreContext } from "./app/stores/root.store";
 
-import { createBrowserHistory } from 'history';
-import { unstable_HistoryRouter as HistoryRouter}  from 'react-router-dom';
-
-export const history = createBrowserHistory() as any;
+import { router } from "app/router/Routes";
+import { RouterProvider } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
     <React.StrictMode>
         <StoreContext.Provider value={store}>
-            <HistoryRouter history={history}>
-                <App />
-            </HistoryRouter>
+            <RouterProvider router={router} />
         </StoreContext.Provider>
     </React.StrictMode>
 );

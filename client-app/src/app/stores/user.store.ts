@@ -3,9 +3,9 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "app/api/agent";
 import { store } from "app/stores/root.store";
 
-import { User, UserFormValues } from "../../models/users/User";
+import { User, UserFormValues } from "models/users/User";
 
-import { history } from "index";
+import { router } from "app/router/Routes";
 import { ROUTES } from "app/common/contants";
 
 export default class UserStore {
@@ -33,7 +33,7 @@ export default class UserStore {
         store.commonStore.setToken(user.token);
 
         runInAction((() => this.user = user));
-        history.push(ROUTES.ACTIVITIES.LIST);
+        router.navigate(ROUTES.ACTIVITIES.LIST);
 
         store.modalStore.closeModal();
     }
@@ -55,7 +55,7 @@ export default class UserStore {
         window.localStorage.removeItem(store.commonStore.localStorageTokenKey);
 
         this.user = null;
-        history.push('/');
+        router.navigate(ROUTES.BASE);
     }
 
     public getUser = async () => {

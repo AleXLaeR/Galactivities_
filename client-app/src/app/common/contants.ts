@@ -1,4 +1,5 @@
 export const ROUTES = {
+    BASE: '/',
     ACTIVITIES: {
         LIST: '/activities',
         CREATE: '/create',
