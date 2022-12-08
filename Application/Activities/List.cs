@@ -3,7 +3,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain.DTOs;
 using Domain.Entities;
-using Domain.Entities.Params;
+using Domain.Enums.Filtering;
 using FluentResults;
 using Infrastructure.Interfaces;
 using MediatR;
@@ -15,7 +15,7 @@ public class List
 {
     public class Query : IRequest<Result<PagedList<ActivityDto>>>
     {
-        public FilteringSortedParams Params { get; set; }
+        public FilterParams Params { get; set; }
     }
     
     public class Handler : IRequestHandler<Query, Result<PagedList<ActivityDto>>>
@@ -48,7 +48,7 @@ public class List
         
         private IQueryable<ActivityDto> GetFilteredActivities(
             IQueryable<ActivityDto> activities, 
-            FilteringSortedParams @params)
+            FilterParams @params)
         {
             if (@params.IsGoing && !@params.IsHost)
             {

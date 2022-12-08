@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain.Entities.Profiles;
+using Domain.Entities.Users;
 using FluentResults;
 using Infrastructure.Interfaces;
 using MediatR;

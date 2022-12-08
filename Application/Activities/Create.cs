@@ -1,5 +1,5 @@
-﻿using Domain;
-using Domain.Entities;
+﻿using Domain.Entities;
+using Domain.Entities.Activities;
 using Domain.Entities.Junctions;
 using FluentResults;
 using Infrastructure.Interfaces;

@@ -1,13 +1,13 @@
 import {makeAutoObservable, reaction, runInAction} from "mobx";
 
-import {Activity, ActivityFormValues} from "../../models/Activity.model";
+import {Activity, ActivityFormValues} from "../../models/activities/Activity";
 import agent from "../api/agent";
 
 import { format } from "date-fns";
 
 import { store } from "./root.store";
-import { UserProfile } from "../../models/UserProfile.model";
-import { Pagination, PagingParams } from "../../models/pagination";
+import { UserProfile } from "../../models/users/UserProfile";
+import { Pagination, PagingParams } from "../../models/Pagination";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
@@ -107,7 +107,7 @@ export default class ActivityStore {
         return params;
     }
 
-    public fetchActivities = async (isLoading = true) => {
+    public fetchActivities = async (isLoading: boolean = true) => {
         if (this.currentLength === 0 ||
             this.activityRegistry.size !== this.currentLength) {
             this.setLoadingInitial(isLoading);
@@ -138,7 +138,6 @@ export default class ActivityStore {
             this.selectedActivity = activity;
             return activity;
         } else {
-            this.setLoadingInitial(true);
             try {
                 const fetchedActivity = await agent.Activities.details(id);
                 runInAction(() => {
@@ -148,9 +147,6 @@ export default class ActivityStore {
             }
             catch (error: any) {
                 console.log(error);
-            }
-            finally {
-                this.setLoadingInitial(false);
             }
             return activity;
         }

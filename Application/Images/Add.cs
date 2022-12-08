@@ -1,6 +1,5 @@
-﻿using Domain.Entities.Images;
+﻿using Domain.Entities.Photos;
 using FluentResults;
-using Infrastructure.Common;
 using Infrastructure.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;

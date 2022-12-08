@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Domain.DTOs;
 using Domain.Enums;
+using Domain.Enums.Filtering;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

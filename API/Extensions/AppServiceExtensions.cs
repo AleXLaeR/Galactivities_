@@ -1,11 +1,8 @@
 ﻿using Application.Activities;
 using Application.Core;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using Infrastructure.Common;
-using Infrastructure.Common.Security;
 using Infrastructure.Interfaces;
 using Infrastructure.Photos;
+using Infrastructure.Security;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -33,21 +30,14 @@ public static class AppServiceExtensions
             policy
                 .AllowAnyMethod()
                 .AllowAnyHeader()
-                .WithOrigins("http://localhost:3000");
+                .WithOrigins(config.GetValue<string>("origin"));
         }));
 
-        //services.AddFluentValidationAutoValidation(_config =>
-        //{
-        //    _config.DisableDataAnnotationsValidation = true;
-        //});
-        //services.AddValidatorsFromAssemblyContaining(typeof(Create));
-        
         services.AddMediatR(typeof(List.Handler).Assembly);
         services.AddAutoMapper(typeof(MappingProfiles).Assembly);
         
-        services.AddScoped<IUserAccessor, UserAccessor>();
-        
         services.Configure<CloudinarySettings>(config.GetSection("Cloudinary"));
+        services.AddScoped<IUserAccessor, UserAccessor>();
         services.AddScoped<IImageAccessor, ImageAccessor>();
     }
 }

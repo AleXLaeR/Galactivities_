@@ -1,5 +1,4 @@
-﻿using System.Net;
-using Application.Images;
+﻿using Application.Images;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;

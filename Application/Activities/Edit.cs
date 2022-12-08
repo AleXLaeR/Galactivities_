@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Domain;
 using Domain.Entities;
+using Domain.Entities.Activities;
 using FluentResults;
 using MediatR;
 using Persistence;
