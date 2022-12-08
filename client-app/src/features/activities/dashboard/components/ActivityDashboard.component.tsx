@@ -11,7 +11,7 @@ import DashboardSidebar from "./dashboard-sidebar/DashboardSidebar.component";
 import ActivityPlaceholder from "./activity-list/ActivityPlaceholder.component";
 
 import InfiniteScroll from "react-infinite-scroller";
-import { Container, Grid, Loader } from 'semantic-ui-react';
+import { Grid, Loader } from 'semantic-ui-react';
 import NoActivitiesFound from "./activity-list/NoActivitiesFound.component";
 
 const ActivityDashboard = () => {
@@ -38,40 +38,36 @@ const ActivityDashboard = () => {
     }
 
     return (
-        <Container style={{marginTop: '6rem'}}>
-            <Grid>
-                <Grid.Column width='10'>
-                    {(activityStore.isLoadingInitial && !loadingNext) ? (
-                        <>
-                            <ActivityPlaceholder />
-                            <ActivityPlaceholder />
-                        </>
-                    ) : (
-                        <>
-                            {(activityRegistry.size === 0) ? (
-                                <NoActivitiesFound />
-                            ) : (
-                                <InfiniteScroll
-                                    pageStart={0}
-                                    loadMore={handleGetNext}
-                                    hasMore={!isLoadingInitial && !!pagination
-                                        && pagination.currentPage < pagination.totalPages}
-                                    initialLoad={false}
-                                >
-                                    <ActivityList />
-                                </InfiniteScroll>
-                            )}
-                        </>
+        <Grid>
+            <Grid.Column width='10'>
+                {(activityStore.isLoadingInitial && !loadingNext) ? (<>
+                        <ActivityPlaceholder />
+                        <ActivityPlaceholder />
+                    </>
+                ) : (
+                    <>
+                        {(activityRegistry.size === 0) ? (
+                            <NoActivitiesFound />
+                        ) : (
+                            <InfiniteScroll
+                                pageStart={0}
+                                loadMore={handleGetNext}
+                                hasMore={!isLoadingInitial && !!pagination
+                                    && pagination.currentPage < pagination.totalPages}
+                                initialLoad={false}
+                            >
+                                <ActivityList />
+                            </InfiniteScroll>
+                        )}</>
                     )}
-                </Grid.Column>
-                <Grid.Column width='6'>
-                    <DashboardSidebar />
-                </Grid.Column>
-                <Grid.Column width={10} style={{margin: '1.5rem 0'}}>
-                    <Loader active={loadingNext} content='Loading next batch of activities' />
-                </Grid.Column>
-            </Grid>
-        </Container>
+            </Grid.Column>
+            <Grid.Column width='6'>
+                <DashboardSidebar />
+            </Grid.Column>
+            <Grid.Column width={10} style={{margin: '1.5rem 0'}}>
+                <Loader active={loadingNext} content='Loading next batch of activities' />
+            </Grid.Column>
+        </Grid>
     );
 };
 

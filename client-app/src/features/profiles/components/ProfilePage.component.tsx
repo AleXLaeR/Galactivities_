@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 import { useMobXStore } from "../../../app/stores/root.store";
 
-import { Container, Grid } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 import Spinner from "app/common/components/loaders/Spinner.component";
 
 import ProfileHeader from "./profile-main/ProfileHeader.component";
@@ -28,18 +28,16 @@ const ProfilePage = () => {
         return <Spinner content='Loading profile...' />
 
     return (
-        <Container style={{marginTop: '6rem'}}>
-            <Grid>
-                <Grid.Column width={16}>
-                    {profile && (
-                        <>
-                            <ProfileHeader profile={profile} />
-                            <ProfileContent profile={profile} />
-                        </>
-                    )}
-                </Grid.Column>
-            </Grid>
-        </Container>
+        <Grid>
+            <Grid.Column width={16}>
+                {profile && (
+                    <>
+                        <ProfileHeader profile={profile} />
+                        <ProfileContent profile={profile} />
+                    </>
+                )}
+            </Grid.Column>
+        </Grid>
     );
 };
 

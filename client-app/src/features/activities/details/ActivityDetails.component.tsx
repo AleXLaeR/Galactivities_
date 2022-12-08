@@ -4,7 +4,7 @@ import useFetchActivity from "./hooks/useFetchActivity";
 import { useMobXStore } from "app/stores/root.store";
 import { observer } from "mobx-react-lite";
 
-import { Container, Grid } from "semantic-ui-react";
+import {Grid } from "semantic-ui-react";
 import Spinner from "app/common/components/loaders/Spinner.component";
 
 import ActivityHeader from "./header/ActivityHeader.component";
@@ -22,18 +22,16 @@ const ActivityDetails = () => {
         return <Spinner content='Loading activity...' />;
 
     return (
-        <Container style={{marginTop: '6rem'}}>
-            <Grid>
-                <Grid.Column width={10}>
-                    <ActivityHeader activity={selectedActivity} />
-                    <ActivityInfo activity={selectedActivity} />
-                    <ActivityChat />
-                </Grid.Column>
-                <Grid.Column width={6}>
-                    <ActivitySideBar activity={selectedActivity} />
-                </Grid.Column>
-            </Grid>
-        </Container>
+        <Grid>
+            <Grid.Column width={10}>
+                <ActivityHeader activity={selectedActivity} />
+                <ActivityInfo activity={selectedActivity} />
+                <ActivityChat />
+            </Grid.Column>
+            <Grid.Column width={6}>
+                <ActivitySideBar activity={selectedActivity} />
+            </Grid.Column>
+        </Grid>
     );
 }
 
