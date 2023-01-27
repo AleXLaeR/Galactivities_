@@ -10,7 +10,7 @@ import { router } from "app/router/Routes";
 import { ROUTES } from "app/common/contants";
 
 import { toast } from "react-toastify";
-import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { ReasonPhrases, StatusCodes } from "http-status-codes";
 
 const sleep = (delay: number) => {
     return new Promise(resolve => {
@@ -45,19 +45,18 @@ axios.interceptors.response.use(async response => {
 
     return response;
 }, (error: AxiosError) => {
-    let { data, status, config } = error.response!;
-    const newData = data as any;
+    let { data, status: statusCode, config: { method } } = error.response!;
+    const { errors } = data as any;
 
-    switch (status) {
+    switch (statusCode) {
         case StatusCodes.BAD_REQUEST:
             if (typeof data === 'string') {
                 return toast.error(data);
             }
-            if (config.method === 'get' && newData.errors.hasOwnProperty('id')) {
+            if (method === 'get' && errors.hasOwnProperty('id')) {
                 router.navigate(ROUTES.ERROR.NOT_FOUND);
             }
 
-            const { errors } = newData;
             if (errors) {
                 const modalStateErrors = [];
                 for (const key in errors) {
@@ -69,7 +68,9 @@ axios.interceptors.response.use(async response => {
             }
             break;
         case StatusCodes.UNAUTHORIZED:
-            router.navigate(ROUTES.ERROR.UNAUTHORIZED);
+            if (method !== 'post') {
+                router.navigate(ROUTES.ERROR.UNAUTHORIZED);
+            }
             break;
         case StatusCodes.FORBIDDEN:
             toast.error(ReasonPhrases.FORBIDDEN);

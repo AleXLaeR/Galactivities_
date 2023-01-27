@@ -1,5 +1,6 @@
-import { useMobXStore } from "app/stores/root.store";
-import { Button, Container, Header, Icon, Segment } from "semantic-ui-react";
+import { useMobXStore } from 'app/stores/root.store';
+import { FilterType } from 'app/stores/activity.store';
+import { Button, Container, Header, Icon, Segment } from 'semantic-ui-react';
 
 const NoActivitiesFound = () => {
     const { activityStore: { setFilter } } = useMobXStore();
@@ -12,7 +13,7 @@ const NoActivitiesFound = () => {
                     Oops - no activities correspond to that filters!
                 </Header>
                 <Segment.Inline>
-                    <Button onClick={() => setFilter('startDate', new Date())}>
+                    <Button onClick={() => setFilter(FilterType.BY_DATE, new Date())}>
                         Return to default list
                     </Button>
                 </Segment.Inline>

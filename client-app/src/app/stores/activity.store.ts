@@ -1,13 +1,24 @@
-import {makeAutoObservable, reaction, runInAction} from "mobx";
+import { makeAutoObservable, reaction, runInAction } from 'mobx';
 
-import {Activity, ActivityFormValues} from "../../models/activities/Activity";
-import agent from "../api/agent";
+import { Activity, ActivityFormValues } from 'models/activities/Activity';
+import agent from '../api/agent';
 
-import { format } from "date-fns";
+import { format } from 'date-fns';
 
-import { store } from "./root.store";
-import { UserProfile } from "../../models/users/UserProfile";
-import { Pagination, PagingParams } from "../../models/Pagination";
+import { store } from './root.store';
+import { UserProfile } from 'models/users/UserProfile';
+import { Pagination, PagingParams } from 'models/Pagination';
+
+export type SortType = 'date' | 'dateDescending' | 'popularity' |
+    'popularityDescending' | 'relevancy' | 'relevancyDescending';
+type ActivityGroup = { [key: string]: Activity[] };
+
+export enum FilterType {
+    NONE = 'all',
+    BY_DATE = 'startDate',
+    BY_HOST = 'isHost',
+    BY_ATTENDANCE = 'isGoing',
+}
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
@@ -20,66 +31,61 @@ export default class ActivityStore {
     pagination: Pagination | null = null;
     pagingParams = new PagingParams();
 
-    filter = new Map().set('all', true);
-    sorting = 'date';
+    activityFilter = new Map().set(FilterType.NONE, true);
+
+    sortActivitiesBy: SortType = 'date';
 
     private currentLength: number = 0;
 
     public constructor() {
         makeAutoObservable(this);
 
-        reaction(() => this.filter.keys(),
-            () => {
-                this.pagingParams = new PagingParams();
-                this.activityRegistry.clear();
-                this.fetchActivities().then();
-            })
-        ;
-        reaction(() => this.sorting,
-            () => {
-                this.pagingParams = new PagingParams();
-                this.activityRegistry.clear();
-                this.fetchActivities().then();
-            })
-        ;
+        const onReaction = () => {
+            this.pagingParams = new PagingParams();
+            this.activityRegistry.clear();
+            this.fetchActivities().then();
+        }
+
+        reaction(() => this.activityFilter.keys(), onReaction);
+        reaction(() => this.sortActivitiesBy,onReaction);
     }
 
     public setPagingParams = (pagingParams: PagingParams) => {
         this.pagingParams = pagingParams;
     }
 
-    public setFilter = (filter: string, value?: any) => {
+    public setFilter = (filter: FilterType, value?: any) => {
         const resetFilter = () => {
-            this.filter.forEach((value, key) => {
-                if (key !== 'startDate') this.filter.delete(key);
-            })
+            this.activityFilter.forEach((value, key) => {
+                if (key !== FilterType.BY_DATE) {
+                    this.activityFilter.delete(key);
+                }
+            });
         }
 
-        console.log(filter)
-
         switch (filter) {
-            case 'all':
+            case FilterType.NONE:
                 resetFilter();
-                this.filter.set('all', value);
+                this.activityFilter.set(FilterType.NONE, value);
                 break;
-            case 'isGoing':
+            case FilterType.BY_ATTENDANCE:
                 resetFilter();
-                this.filter.set('isGoing', value);
+                this.activityFilter.set(FilterType.BY_ATTENDANCE, value);
                 break;
-            case 'isHost':
+            case FilterType.BY_HOST:
                 resetFilter();
-                this.filter.set('isHost', value);
+                this.activityFilter.set(FilterType.BY_HOST, value);
                 break;
-            case 'startDate':
-                this.filter.delete('startDate');
-                this.filter.set('startDate', value);
+            case FilterType.BY_DATE:
+                this.activityFilter.delete(FilterType.BY_DATE);
+                this.activityFilter.set(FilterType.BY_DATE, value);
                 break;
         }
     }
 
     public updateAttendeeFollowings = (username: string) => {
-        this.activityRegistry.forEach(activity => {
-            activity.attendees.forEach(attendee => {
+        this.activityRegistry.forEach(({ attendees }) => {
+            attendees.forEach(attendee => {
                 if (attendee.username === username) {
                     attendee.isFollowing ? attendee.followersCount-- : attendee.followersCount++;
                     attendee.isFollowing = !attendee.isFollowing;
@@ -88,8 +94,8 @@ export default class ActivityStore {
         });
     }
 
-    public setSorting = (sortBy: string) => {
-        this.sorting = sortBy;
+    public setSorting = (sortBy: SortType) => {
+        this.sortActivitiesBy = sortBy;
     }
 
     private get axiosParams() {
@@ -98,12 +104,12 @@ export default class ActivityStore {
         params.append('pageNumber', this.pagingParams.pageNumber.toString());
         params.append('pageSize', this.pagingParams.pageSize.toString());
 
-        this.filter.forEach((value, key) =>
-            params.append(key, (key === 'startDate') ?
-                (value as Date).toISOString() : value)
+        this.activityFilter.forEach((value, key) =>
+            params.append(key, (key === FilterType.BY_DATE) ?
+                (value as Date).toISOString() : value.toString())
         );
-        params.append('Filter', this.sorting);
 
+        params.append('Filter', this.sortActivitiesBy);
         return params;
     }
 
@@ -171,13 +177,13 @@ export default class ActivityStore {
         return Array.from(this.activityRegistry.values());
     }
 
-    get groupedActivities() {
+    public get groupedActivities() {
         return Object.entries(
-            this.activitiesArrayFromMap.reduce((activities, activity) => {
+            this.activitiesArrayFromMap.reduce((group, activity) => {
                 const date = format(activity.date, 'dd MMM yyyy h:mm aa').slice(0, 11);
-                activities[date] = activities[date] ? [...activities[date], activity] : [activity];
-                return activities;
-            }, {} as { [key: string]: Activity[] })
+                group[date] ??= [activity];
+                return group;
+            }, {} as ActivityGroup)
         )
     }
 
@@ -209,11 +215,13 @@ export default class ActivityStore {
 
         runInAction(() => {
             const activityId = activity.id!;
-            let updatedActivity = {...this.activityRegistry.get(activityId), ...activity};
+            let updatedActivity = {
+                ...this.activityRegistry.get(activityId),
+                ...activity
+            } as Activity;
 
-            const asActivity = updatedActivity as Activity;
-            this.activityRegistry.set(activityId, asActivity);
-            this.selectedActivity = asActivity;
+            this.activityRegistry.set(activityId, updatedActivity);
+            this.selectedActivity = updatedActivity;
         });
     }
 
@@ -257,7 +265,7 @@ export default class ActivityStore {
                 if (this.selectedActivity?.isGoing) {
                     this.selectedActivity.attendees =
                         this.selectedActivity.attendees?.filter(
-                            a => a.username !== user.username
+                            ({ username }) => username !== user.username
                         );
                     this.selectedActivity.isGoing = false;
                 } else {

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import { observer } from "mobx-react-lite";
-import { useMobXStore } from "../../../app/stores/root.store";
+import { useMobXStore } from "app/stores/root.store";
 
 import { Grid } from "semantic-ui-react";
 import Spinner from "app/common/components/loaders/Spinner.component";
@@ -18,10 +18,7 @@ const ProfilePage = () => {
 
     useEffect(() => {
         fetchProfile(username!).then();
-
-        return () => {
-            setActiveTab(0);
-        }
+        return () => setActiveTab(0);
     }, [fetchProfile, setActiveTab, username]);
 
     if (isLoading)
