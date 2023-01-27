@@ -32,7 +32,7 @@ export default class UserStore {
     private onLoginOrRegisterEvent = (user: User) => {
         store.commonStore.setToken(user.token);
 
-        runInAction((() => this.user = user));
+        runInAction(() => this.user = user);
         router.navigate(ROUTES.ACTIVITIES.LIST);
 
         store.modalStore.closeModal();
@@ -41,8 +41,8 @@ export default class UserStore {
     // TODO fix unwanted redirection on login
     public login = async (credentials: UserFormValues) => {
         try {
+
             const user = await agent.Account.login(credentials);
-            console.log(user)
             this.onLoginOrRegisterEvent(user);
         }
         catch (error) {

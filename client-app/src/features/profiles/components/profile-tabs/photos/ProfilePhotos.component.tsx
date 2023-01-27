@@ -6,7 +6,7 @@ import { useMobXStore } from "app/stores/root.store";
 import { UserProfile } from "models/users/UserProfile";
 import Viewer from "react-viewer";
 
-import { Button, Card, Grid, Header, Image, Tab } from "semantic-ui-react";
+import { Button, Card, Grid, Header, Tab } from "semantic-ui-react";
 import ImageUploadWidget from "features/image-upload/components/ImageUploadWidget.component";
 import ProfilePhotoItem from "./ProfilePhotoItem.component";
 

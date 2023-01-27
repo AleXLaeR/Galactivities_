@@ -19,40 +19,37 @@ const ProfileAbout = () => {
                     <Header
                         floated='left'
                         icon='user'
-                        content={'About ' + profile?.displayName}
+                        content={`About ${profile?.displayName}`}
                     />
                     {isActiveUserStored && (
                         <Button
                             floated='right'
                             basic
                             content={isEditMode ? 'Cancel' : 'Edit Profile'}
-                            onClick={() => setIsEditMode(!isEditMode)}
+                            onClick={() => setIsEditMode(prev => !prev)}
                         />
                     )}
                 </Grid.Column>
-
                 <Grid.Column width='16'>
-                    {(profile?.biography === null) ? (
-                        <Header
-                            as='h3'
-                            content='Nothing to show here'
-                            textAlign='center'
-                            style={{marginTop: '1rem'}}
-                        />
-                    ) : (
-                        <>
-                            {isEditMode ? (
-                                <ProfileEditForm setEditMode={setIsEditMode} />
+                    <>
+                        {isEditMode ? (
+                            <ProfileEditForm setEditMode={setIsEditMode}/>
+                        ) : (
+                            (!profile?.biography || profile.biography === '') ? (
+                                <Header
+                                    as="h3"
+                                    content="Nothing to show here"
+                                    textAlign="center"
+                                    style={{ marginTop: '1rem' }}
+                                />
                             ) : (
-                                <span style={{whiteSpace: 'pre-wrap'}}>
+                                <span style={{ whiteSpace: 'pre-wrap' }}>
                                     {profile?.biography}
                                 </span>
-                            )}
-                        </>
-                    )}
+                            )
+                        )}
+                    </>
                 </Grid.Column>
-
-
             </Grid>
         </Tab.Pane>
     );

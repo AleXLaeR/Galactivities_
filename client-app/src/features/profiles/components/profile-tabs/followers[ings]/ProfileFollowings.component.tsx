@@ -22,9 +22,17 @@ const ProfileFollowings = () => {
                 </Grid.Column>
                 <Grid.Column width={16}>
                     <Card.Group itemsPerRow={3}>
-                        {followings.map(profile => (
+                        {(followings.length !== 0) ? (
+                            followings.map(profile => (
                             <ProfileCard size='mini' key={profile.username} profile={profile} />
-                        ))}
+                        ))) : (
+                            <Header
+                                as="h3"
+                                content="Nothing to show here"
+                                textAlign="center"
+                                style={{ marginTop: '2.25rem', position: 'relative', left: '40%' }}
+                            />
+                        )}
                     </Card.Group>
                 </Grid.Column>
             </Grid>

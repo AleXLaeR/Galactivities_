@@ -2,6 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useMobXStore } from "app/stores/root.store";
 
 import { Header, Menu } from "semantic-ui-react";
+import { SortType } from 'app/stores/activity.store';
 
 const FilterHeaderStyles = {
     borderRadius: '6px',
@@ -9,14 +10,14 @@ const FilterHeaderStyles = {
     borderBottomRightRadius: '0',
 }
 
-const sortingMap: Map<string, string> = new Map()
+const sortingMap: Map<string, SortType> = new Map()
     .set('Most Recent', 'date')
     .set('Most Popular', 'popularityDescending')
     .set('Most Discussed', 'relevancyDescending');
 
 const ActivitySorts = () => {
     const { activityStore } = useMobXStore();
-    const { sorting, setSorting } = activityStore;
+    const { sortActivitiesBy, setSorting } = activityStore;
 
     return (
         <Menu vertical size="large" fluid style={{marginTop: "2rem"}}>
@@ -32,9 +33,9 @@ const ActivitySorts = () => {
             <Menu.Item
                 key={key}
                 content={key}
-                active={sorting === sortingMap.get(key)}
+                active={sortActivitiesBy === sortingMap.get(key)}
                 style={{cursor: 'pointer', backgroundColor: '#a4a1a1 !important'}}
-                icon={(sorting === sortingMap.get(key)) ? "checkmark" : null}
+                icon={(sortActivitiesBy === sortingMap.get(key)) ? "checkmark" : null}
                 onClick={() => setSorting(sortingMap.get(key)!)}
             />
         ))}
