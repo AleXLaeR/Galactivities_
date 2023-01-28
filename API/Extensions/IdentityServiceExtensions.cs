@@ -39,6 +39,21 @@ public static class IdentityServiceExtensions
                     ValidateIssuer = false,
                     ValidateAudience = false,
                 };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = ctx =>
+                    {
+                        var accessToken = ctx.Request.Query["access_token"];
+                        var path = ctx.HttpContext.Request.Path;
+
+                        if (!String.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chat"))
+                        {
+                            ctx.Token = accessToken;
+                        }
+
+                        return Task.CompletedTask;
+                    }
+                };
             });
         services.AddAuthorization(options =>
         {
