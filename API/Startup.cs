@@ -51,10 +51,14 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseDefaultFiles();
+        app.UseStaticFiles();
+
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
             endpoints.MapHub<ChatHub>("/chat");
+            endpoints.MapFallbackToController("Index", "Fallback");
         });
     }
 }

@@ -33,6 +33,8 @@ axios.interceptors.request.use(config => {
 axios.interceptors.response.use(async response => {
     if (process.env.NODE_ENV === 'development') {
         await sleep(1000);
+    } else {
+        await sleep(200);
     }
 
     const pagination = response.headers['pagination'];
