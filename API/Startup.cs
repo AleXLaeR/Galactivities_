@@ -1,5 +1,6 @@
 ﻿using API.Extensions;
 using API.Middlewares;
+using API.SignalR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
@@ -53,6 +54,7 @@ public class Startup
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapHub<ChatHub>("/chat");
         });
     }
 }

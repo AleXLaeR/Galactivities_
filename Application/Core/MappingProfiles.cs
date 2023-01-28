@@ -2,6 +2,7 @@
 using Domain.DTOs;
 using Domain.Entities;
 using Domain.Entities.Activities;
+using Domain.Entities.Comments;
 using Domain.Entities.Junctions;
 using Domain.Entities.Users;
 
@@ -90,6 +91,20 @@ public class MappingProfiles : Profile
             .ForMember(d => d.HostUsername, 
                 o => o.MapFrom(s =>
                     s.Activity.Attendees.FirstOrDefault(aa => aa.IsHost)!.User.UserName)
+            );
+
+        CreateMap<Comment, CommentDto>()
+            .ForMember(d => d.DisplayName,
+                o => o.MapFrom(s =>
+                    s.Author.DisplayName)
+            )
+            .ForMember(d => d.Username,
+                o => o.MapFrom(s =>
+                    s.Author.UserName)
+            )
+            .ForMember(d => d.ImageUri,
+                o => o.MapFrom(s =>
+                    s.Author.Images.FirstOrDefault(i => i.IsMain)!.Uri)
             );
     }
 }

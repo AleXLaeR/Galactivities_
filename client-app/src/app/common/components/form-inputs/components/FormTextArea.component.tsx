@@ -10,12 +10,12 @@ interface Props {
 }
 
 const TextArea = (props: Props) => {
-    const [field, meta] = useField(props);
+    const [field, meta] = useField(props.name);
 
     return (
         <Form.Field error={meta.touched && !!meta.error}>
             <label>{props.label}</label>
-            <textarea rows={props.rows ?? 3} {...field} {...props}/>
+            <textarea rows={props.rows ?? 3} {...field} {...props} />
             <ErrorLabel meta={meta} />
         </Form.Field>
     );

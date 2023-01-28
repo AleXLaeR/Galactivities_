@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Comments;
 using Domain.Entities.Junctions;
 
 namespace Domain.Entities.Activities;
@@ -31,4 +32,6 @@ public class Activity
     public bool IsCancelled { get; set; }
 
     public List<ActivityAttendee> Attendees { get; set; } = new();
+
+    public List<Comment> Comments { get; set; } = new();
 }

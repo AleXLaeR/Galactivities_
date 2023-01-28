@@ -4,9 +4,9 @@ interface SpinnerProps extends LoaderProps {
     inverted?: boolean;
 }
 
-const Spinner = ({ inverted = true, ...otherProps }: SpinnerProps) => (
+const Spinner = ({ inverted = true, content, ...otherProps }: SpinnerProps) => (
     <Dimmer active inverted={inverted}>
-        <Loader {...otherProps} content={otherProps.content ?? 'Loading App...'} />
+        <Loader {...otherProps} content={content ?? 'Loading App...'} />
     </Dimmer>
 );
 
