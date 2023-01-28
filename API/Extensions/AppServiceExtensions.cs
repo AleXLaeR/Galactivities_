@@ -22,7 +22,7 @@ public static class AppServiceExtensions
         services.AddControllers();
         
         services.AddDbContext<DataContext>(option =>
-            option.UseSqlServer(config.GetConnectionString("defaultConnection")!)
+            option.UseNpgsql(config.GetConnectionString("defaultConnection")!)
         );
         
         services.AddCors(opt => opt.AddPolicy("CorsPolicy", policy =>
