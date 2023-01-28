@@ -8,9 +8,7 @@ import { RouterProvider } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
-    <React.StrictMode>
-        <StoreContext.Provider value={store}>
-            <RouterProvider router={router} />
-        </StoreContext.Provider>
-    </React.StrictMode>
+    <StoreContext.Provider value={store}>
+        <RouterProvider router={router}/>
+    </StoreContext.Provider>
 );
