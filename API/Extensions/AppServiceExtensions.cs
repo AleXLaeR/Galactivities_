@@ -30,6 +30,7 @@ public static class AppServiceExtensions
             policy
                 .AllowAnyMethod()
                 .AllowAnyHeader()
+                .AllowCredentials()
                 .WithOrigins(config.GetValue<string>("origin"));
         }));
 
