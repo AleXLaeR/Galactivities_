@@ -251,8 +251,8 @@ export default class ActivityStore {
         }
     }
 
-    public onEditClickAction = () => {
-        this.setEditMode(!this.isEditMode);
+    public clearSelectedActivity = () => {
+        this.selectedActivity = undefined;
     }
 
     public updateAttendance = async () => {
