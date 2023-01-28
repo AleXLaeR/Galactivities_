@@ -1,21 +1,28 @@
 import { Comment } from "semantic-ui-react";
+import CommentModel from "models/comments/Comment";
+import { IMAGE_URIS, ROUTES } from 'app/common/contants';
+import { Link } from 'react-router-dom';
+import { formatDistanceToNow } from 'date-fns';
 
 interface Props {
-    comment: any;
+    comment: CommentModel;
 }
 
-const CommentItem = ({ comment }: Props) => (
-    <Comment>
-        <Comment.Avatar src='/assets/user.png'/>
+const CommentItem = ({ comment: { body, createdAt, displayName, username, imageUri } }: Props) => (
+    <Comment style={{ padding: '.35rem 0' }}>
+        <Comment.Avatar src={imageUri ?? IMAGE_URIS.USER_DEFAULT} />
         <Comment.Content>
-            <Comment.Author as='a'>Joe Henderson</Comment.Author>
+            <Comment.Author as={Link} to={`${ROUTES.PROFILE.BASE}/${username}`}>
+                {displayName}
+            </Comment.Author>
             <Comment.Metadata>
-                <div>5 days ago</div>
+                <h5>
+                    {`${formatDistanceToNow(createdAt)} ago`}
+                </h5>
             </Comment.Metadata>
-            <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-            <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-            </Comment.Actions>
+            <Comment.Text style={{ whiteSpace: 'pre-wrap' }}>
+                {body}
+            </Comment.Text>
         </Comment.Content>
     </Comment>
 );
