@@ -59,12 +59,12 @@ const ActivityDashboard = () => {
                                 <ActivityList />
                             </InfiniteScroll>
                         )}</>
-                    )}
+                )}
             </Grid.Column>
-            <Grid.Column width='6'>
+            <Grid.Column width='6' style={{ marginTop: '.3rem' }}>
                 <DashboardSidebar />
             </Grid.Column>
-            <Grid.Column width={10} style={{margin: '1.5rem 0'}}>
+            <Grid.Column width='10' style={{margin: '1.5rem 0'}}>
                 <Loader active={loadingNext} content='Loading next batch of activities' />
             </Grid.Column>
         </Grid>

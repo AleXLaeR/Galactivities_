@@ -2,7 +2,7 @@ import { observer } from "mobx-react-lite";
 import { useMobXStore } from "app/stores/root.store";
 
 import { Header, Menu } from "semantic-ui-react";
-import { FilterType } from '../../../../../../app/stores/activity.store';
+import { FilterType } from 'app/stores/activity.store';
 
 const FilterHeaderStyles = {
     borderRadius: '6px',
@@ -18,6 +18,14 @@ const sortingMap: Map<string, FilterType> = new Map()
 const ActivityFilters = () => {
     const { activityStore } = useMobXStore();
     const { activityFilter, setFilter } = activityStore;
+
+    const handleClick = (filterKey: string) => {
+        const filter = sortingMap.get(filterKey)!;
+
+        if (!activityFilter.has(filter)) {
+            setFilter(filter, true);
+        }
+    }
 
     return (
         <Menu vertical size="large" fluid style={{marginTop: "2rem"}}>
@@ -37,7 +45,7 @@ const ActivityFilters = () => {
                     className="filter-title"
                     style={{cursor: 'pointer', backgroundColor: '#a4a1a1 !important'}}
                     icon={activityFilter.has(sortingMap.get(key)) ? "checkmark" : null}
-                    onClick={() => setFilter(sortingMap.get(key)!, true)}
+                    onClick={() => handleClick(key)}
                 />
             ))}
         </Menu>
