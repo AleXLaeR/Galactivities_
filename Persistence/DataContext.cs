@@ -1,5 +1,5 @@
-﻿using Domain.Entities;
-using Domain.Entities.Activities;
+﻿using Domain.Entities.Activities;
+using Domain.Entities.Comments;
 using Domain.Entities.Junctions;
 using Domain.Entities.Photos;
 using Domain.Entities.Users;
@@ -23,6 +23,8 @@ public class DataContext : IdentityDbContext<User>
 
     public DbSet<UserFollowing> UserFollowings { get; set; }
 
+    public DbSet<Comment> Comments { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<ActivityAttendee>(b =>
@@ -41,6 +43,11 @@ public class DataContext : IdentityDbContext<User>
             .HasOne(a => a.Activity)
             .WithMany(a => a.Attendees)
             .HasForeignKey(aa => aa.ActivityId);
+        
+        builder.Entity<Comment>()
+            .HasOne(a => a.Activity)
+            .WithMany(a => a.Comments)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<UserFollowing>(b =>
         {

@@ -22,7 +22,7 @@ namespace Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.Entities.Activity", b =>
+            modelBuilder.Entity("Domain.Entities.Activities.Activity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,26 +58,32 @@ namespace Persistence.Migrations
                     b.ToTable("activities", "production");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Images.Image", b =>
+            modelBuilder.Entity("Domain.Entities.Comments.Comment", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ActivityId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AuthorId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("IsMain")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Uri")
+                    b.Property<string>("Body")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("ActivityId");
 
-                    b.ToTable("Images");
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("comments", "production");
                 });
 
             modelBuilder.Entity("Domain.Entities.Junctions.ActivityAttendee", b =>
@@ -113,7 +119,29 @@ namespace Persistence.Migrations
                     b.ToTable("UserFollowings");
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("Domain.Entities.Photos.Image", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Uri")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -318,22 +346,32 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.Entities.Images.Image", b =>
+            modelBuilder.Entity("Domain.Entities.Comments.Comment", b =>
                 {
-                    b.HasOne("Domain.Entities.User", null)
-                        .WithMany("Images")
-                        .HasForeignKey("UserId");
+                    b.HasOne("Domain.Entities.Activities.Activity", "Activity")
+                        .WithMany("Comments")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Users.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("Author");
                 });
 
             modelBuilder.Entity("Domain.Entities.Junctions.ActivityAttendee", b =>
                 {
-                    b.HasOne("Domain.Entities.Activity", "Activity")
+                    b.HasOne("Domain.Entities.Activities.Activity", "Activity")
                         .WithMany("Attendees")
                         .HasForeignKey("ActivityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.User", "User")
+                    b.HasOne("Domain.Entities.Users.User", "User")
                         .WithMany("Activities")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -346,13 +384,13 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Entities.Junctions.UserFollowing", b =>
                 {
-                    b.HasOne("Domain.Entities.User", "Observer")
+                    b.HasOne("Domain.Entities.Users.User", "Observer")
                         .WithMany("Followings")
                         .HasForeignKey("ObserverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.User", "Target")
+                    b.HasOne("Domain.Entities.Users.User", "Target")
                         .WithMany("Followers")
                         .HasForeignKey("TargetId")
                         .OnDelete(DeleteBehavior.NoAction)
@@ -361,6 +399,13 @@ namespace Persistence.Migrations
                     b.Navigation("Observer");
 
                     b.Navigation("Target");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Photos.Image", b =>
+                {
+                    b.HasOne("Domain.Entities.Users.User", null)
+                        .WithMany("Images")
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -374,7 +419,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Domain.Entities.User", null)
+                    b.HasOne("Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -383,7 +428,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Domain.Entities.User", null)
+                    b.HasOne("Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -398,7 +443,7 @@ namespace Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.User", null)
+                    b.HasOne("Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -407,19 +452,21 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Domain.Entities.User", null)
+                    b.HasOne("Domain.Entities.Users.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Domain.Entities.Activity", b =>
+            modelBuilder.Entity("Domain.Entities.Activities.Activity", b =>
                 {
                     b.Navigation("Attendees");
+
+                    b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("Domain.Entities.User", b =>
+            modelBuilder.Entity("Domain.Entities.Users.User", b =>
                 {
                     b.Navigation("Activities");
 
