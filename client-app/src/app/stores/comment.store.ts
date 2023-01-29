@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from 'mobx';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { store } from './root.store';
 import Comment from "models/comments/Comment";
+import * as process from 'process';
 
 export default class CommentStore {
     comments: Comment[] = [];
@@ -14,7 +15,7 @@ export default class CommentStore {
     public createHubConnection = (activityId?: string) => {
         if (activityId) {
             this.hubConnection = new HubConnectionBuilder()
-                .withUrl(`http://localhost:5000/chat?activityId=${activityId}`, {
+                .withUrl(`${process.env.REACT_APP_CHAT_URL}?activityId=${activityId}`, {
                     skipNegotiation: true,
                     transport: HttpTransportType.WebSockets,
                     accessTokenFactory: () => store.userStore.user?.token ?? ''
@@ -30,7 +31,7 @@ export default class CommentStore {
             this.hubConnection.on('LoadComments', (comments: Comment[]) => {
                 runInAction(() => {
                     comments.forEach(comment => {
-                        comment.createdAt = new Date(comment.createdAt + 'Z');
+                        comment.createdAt = new Date(comment.createdAt);
                     });
                     this.comments = comments
                         .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());

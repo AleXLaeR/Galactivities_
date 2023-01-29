@@ -25,7 +25,11 @@ const ActivitySideBar = ({ activity: { attendees, host } }: Props) => (
         <Segment attached>
             <List relaxed divided>
                 {attendees!.filter((_, idx) => idx <= MAXIMUM_DISPLAYED_ATTENDEES).map(attendee => (
-                    <ActivitySideBarItem attendee={attendee} isHost={attendee.username === host?.username} />
+                    <ActivitySideBarItem
+                        key={attendee.username}
+                        attendee={attendee}
+                        isHost={attendee.username === host?.username}
+                    />
                 ))}
                 {(attendees.length > MAXIMUM_DISPLAYED_ATTENDEES) && (
                     <Item style={{textAlign: 'center', fontSize: '1.3rem'}}>

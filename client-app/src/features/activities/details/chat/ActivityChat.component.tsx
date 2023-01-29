@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite'
-import React, { useEffect } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { Segment, Header, Comment, Divider } from 'semantic-ui-react'
 import CommentItem from './ActivityChatItem.component';
 import { useMobXStore } from 'app/stores/root.store';
@@ -9,7 +9,7 @@ interface Props {
     activityId: string;
 }
 
-const ActivityDetailedChat = ({ activityId }: Props) => {
+const ActivityChat = ({ activityId }: Props) => {
     const { commentStore } = useMobXStore();
     const { createHubConnection, clearComments, comments } = commentStore;
 
@@ -37,12 +37,12 @@ const ActivityDetailedChat = ({ activityId }: Props) => {
                 <ActivityChatForm />
                 <Comment.Group style={{ marginBottom: '.5rem' }}>
                     {comments.map((comment, idx) => (
-                        <>
+                        <Fragment key={idx}>
                             <CommentItem comment={comment} />
                             {(idx !== comments.length - 1) && (
                                 <Divider style={{ marginTop: '-.15rem' }} />
                             )}
-                        </>
+                        </Fragment>
                     ))}
                 </Comment.Group>
             </Segment>
@@ -50,4 +50,4 @@ const ActivityDetailedChat = ({ activityId }: Props) => {
     )
 };
 
-export default observer(ActivityDetailedChat);
+export default observer(ActivityChat);

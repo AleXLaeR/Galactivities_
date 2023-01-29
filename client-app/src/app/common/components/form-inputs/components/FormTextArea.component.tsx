@@ -15,7 +15,11 @@ const TextArea = (props: Props) => {
     return (
         <Form.Field error={meta.touched && !!meta.error}>
             <label>{props.label}</label>
-            <textarea rows={props.rows ?? 3} {...field} {...props} />
+            <textarea
+                {...field}
+                {...props}
+                value=''
+                rows={props.rows ?? 3} />
             <ErrorLabel meta={meta} />
         </Form.Field>
     );
