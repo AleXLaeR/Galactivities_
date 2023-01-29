@@ -52,7 +52,10 @@ public class Startup
         app.UseAuthorization();
 
         app.UseDefaultFiles();
-        app.UseStaticFiles();
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = env.WebRootFileProvider
+        });
 
         app.UseEndpoints(endpoints =>
         {

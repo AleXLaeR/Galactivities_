@@ -21,9 +21,41 @@ public static class AppServiceExtensions
         
         services.AddControllers();
         
-        services.AddDbContext<DataContext>(option =>
-            option.UseNpgsql(config.GetConnectionString("defaultConnection")!)
-        );
+        services.AddDbContext<DataContext>(options =>
+        {
+            var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            string connStr;
+
+            // Depending on if in development or production, use either FlyIO
+            // connection string, or development connection string from env var.
+            if (env == "Development")
+            {
+                // Use connection string from file.
+                connStr = config.GetConnectionString("defaultConnection");
+            }
+            else
+            {
+                // Use connection string provided at runtime by FlyIO.
+                var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL")!;
+
+                // Parse connection URL to connection string for Npgsql
+                connUrl = connUrl.Replace("postgres://", string.Empty);
+                var pgUserPass = connUrl.Split("@")[0];
+                var pgHostPortDb = connUrl.Split("@")[1];
+                var pgHostPort = pgHostPortDb.Split("/")[0];
+                var pgDb = pgHostPortDb.Split("/")[1];
+                var pgUser = pgUserPass.Split(":")[0];
+                var pgPass = pgUserPass.Split(":")[1];
+                var pgHost = pgHostPort.Split(":")[0];
+                var pgPort = pgHostPort.Split(":")[1];
+
+                connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+            }
+            
+            options.UseNpgsql(connStr);
+        });
+
         
         services.AddCors(opt => opt.AddPolicy("CorsPolicy", policy =>
         {
@@ -31,7 +63,7 @@ public static class AppServiceExtensions
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials()
-                .WithOrigins(config.GetValue<string>("origin"));
+                .WithOrigins("http://localhost:3000");
         }));
 
         services.AddMediatR(typeof(List.Handler).Assembly);

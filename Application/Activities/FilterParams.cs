@@ -12,5 +12,5 @@ public class FilterParams : PagingParams
 
     public bool IsHost { get; set; } = default;
 
-    public DateTime StartDate { get; set; } = DateTime.Now;
+    public DateTime StartDate { get; set; } = DateTime.UtcNow;
 }

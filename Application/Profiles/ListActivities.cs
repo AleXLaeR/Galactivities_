@@ -41,8 +41,8 @@ public class ListActivities
             query = request.Filter switch
             {
                 ProfileActivityFilter.Hosting => query.Where(aa => aa.HostUsername == request.Username),
-                ProfileActivityFilter.Future => query.Where(aa => aa.Date >= DateTime.Now),
-                ProfileActivityFilter.Past => query.Where(aa => aa.Date < DateTime.Now),
+                ProfileActivityFilter.Future => query.Where(aa => aa.Date >= DateTime.UtcNow),
+                ProfileActivityFilter.Past => query.Where(aa => aa.Date < DateTime.UtcNow),
                 var _ => query,
             };
             
